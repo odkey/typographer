@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "outDir": "../dist",
+    "sourceMap": false
+  },
+  "exclude": [
+  ],
+  "files": [
+    "requires.ts",
+    "main.ts",
+    "base_application.ts",
+    "base_browser_window.ts"
+  ]
+}
