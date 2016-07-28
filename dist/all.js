@@ -14,64 +14,28 @@ var base_window;
             var _this = this;
             this.window = new electron.BrowserWindow(options);
             this.window.loadURL(url);
-            this.window.on('closed', function () {
-                _this.onClosed();
-            });
-            this.window.on('close', function (event) {
-                _this.onClose(event);
-            });
-            this.window.on('page-title-updateed', function (event) {
-                _this.onPageTitleUpdated(event);
-            });
-            this.window.on('unresponsive', function () {
-                _this.onUnresponsive();
-            });
-            this.window.on('responsive', function () {
-                _this.onResponsive();
-            });
-            this.window.on('blur', function () {
-                _this.onBlur();
-            });
-            this.window.on('focus', function () {
-                _this.onFocus();
-            });
-            this.window.on('maximize', function () {
-                _this.onMaximize();
-            });
-            this.window.on('unmaximize', function () {
-                _this.onUnmaximize();
-            });
-            this.window.on('minimize', function () {
-                _this.onMinimize();
-            });
-            this.window.on('restore', function () {
-                _this.onRestore();
-            });
-            this.window.on('resize', function () {
-                _this.onResize();
-            });
-            this.window.on('move', function () {
-                _this.onMove();
-            });
-            this.window.on('enter-full-screen', function () {
-                _this.onEnterFullScreen();
-            });
-            this.window.on('leave-full-screen', function () {
-                _this.onLeaveFullScreen();
-            });
-            this.window.on('enter-html-full-screen', function () {
-                _this.onEnterHtmlFullScreen();
-            });
-            this.window.on('leave-html-full-screen', function () {
-                _this.onLeaveHtmlFullScreen();
-            });
+            this.window.on('closed', function () { _this.onClosed(); });
+            this.window.on('close', function (event) { _this.onClose(event); });
+            this.window.on('page-title-updateed', function (event) { _this.onPageTitleUpdated(event); });
+            this.window.on('unresponsive', function () { _this.onUnresponsive(); });
+            this.window.on('responsive', function () { _this.onResponsive(); });
+            this.window.on('blur', function () { _this.onBlur(); });
+            this.window.on('focus', function () { _this.onFocus(); });
+            this.window.on('maximize', function () { _this.onMaximize(); });
+            this.window.on('unmaximize', function () { _this.onUnmaximize(); });
+            this.window.on('minimize', function () { _this.onMinimize(); });
+            this.window.on('restore', function () { _this.onRestore(); });
+            this.window.on('resize', function () { _this.onResize(); });
+            this.window.on('move', function () { _this.onMove(); });
+            this.window.on('enter-full-screen', function () { _this.onEnterFullScreen(); });
+            this.window.on('leave-full-screen', function () { _this.onLeaveFullScreen(); });
+            this.window.on('enter-html-full-screen', function () { _this.onEnterHtmlFullScreen(); });
+            this.window.on('leave-html-full-screen', function () { _this.onLeaveHtmlFullScreen(); });
             this.window.on('app-command', function (event, cmd) {
                 _this.onAppCommand(event, cmd);
             });
             // OS X only
-            this.window.on('moved', function () {
-                _this.onMoved();
-            });
+            this.window.on('moved', function () { _this.onMoved(); });
         }
         BaseBrowserWindow.prototype.onClosed = function () {
             this.window = undefined;
@@ -104,10 +68,11 @@ var base_app;
 (function (base_app) {
     var bWin = base_window;
     var BaseApplication = (function () {
-        function BaseApplication(app, windowOptions, url) {
+        function BaseApplication(app, windowOptions, url, appName) {
             var _this = this;
             this.app = app;
             this.mainWindow = undefined;
+            this.appName = 'ElectronApp';
             this.windowOptions = {
                 width: 800,
                 height: 400,
@@ -117,27 +82,18 @@ var base_app;
                 titleBarStyle: 'default'
             };
             this.startUrl = 'file://' + __dirname + '/index.html';
+            this.appName = appName;
             if (windowOptions !== undefined) {
                 this.windowOptions = windowOptions;
             }
             if (url !== undefined) {
                 this.startUrl = url;
             }
-            this.app.on('will-finish-launching', function () {
-                _this.onWillFinishLaunching();
-            });
-            this.app.on('ready', function () {
-                _this.onReady();
-            });
-            this.app.on('window-all-closed', function () {
-                _this.onWindowAllClosed();
-            });
-            this.app.on('before-quit', function (event) {
-                _this.onBeforeQuit(event);
-            });
-            this.app.on('will-quit', function (event) {
-                _this.onWillQuit(event);
-            });
+            this.app.on('will-finish-launching', function () { _this.onWillFinishLaunching(); });
+            this.app.on('ready', function () { _this.onReady(); });
+            this.app.on('window-all-closed', function () { _this.onWindowAllClosed(); });
+            this.app.on('before-quit', function (event) { _this.onBeforeQuit(event); });
+            this.app.on('will-quit', function (event) { _this.onWillQuit(event); });
             this.app.on('quit', function (event, exitCode) {
                 _this.onQuit(event, exitCode);
             });
@@ -159,9 +115,7 @@ var base_app;
             this.app.on('login', function (event, webContents, request, authInfo, callback) {
                 _this.onLogin(event, webContents, request, authInfo, callback);
             });
-            this.app.on('gpu-process-crashed', function () {
-                _this.onGpuProcessCrashed();
-            });
+            this.app.on('gpu-process-crashed', function () { _this.onGpuProcessCrashed(); });
             // OS X only
             this.app.on('open-file', function (event, path) {
                 _this.onOpenFile(event, path);
@@ -212,10 +166,27 @@ var base_app;
     }());
     base_app.BaseApplication = BaseApplication;
 })(base_app || (base_app = {})); // module base_app
+/// <reference path="./requires.ts" />
+/// <reference path="./base_browser_window.ts" />
+var preview_window;
+(function (preview_window) {
+    var bWin = base_window;
+    var PreviewWindow = (function (_super) {
+        __extends(PreviewWindow, _super);
+        function PreviewWindow(options, url) {
+            _super.call(this, options, url);
+        }
+        return PreviewWindow;
+    }(bWin.BaseBrowserWindow));
+    preview_window.PreviewWindow = PreviewWindow;
+})(preview_window || (preview_window = {})); // module preview_window
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
 /// <reference path='./base_application.ts' />
+/// <reference path="./preview_window.ts"/>
 var bApp = base_app;
+var bWin = base_window;
+var previewWindow = preview_window;
 var app = electron.app;
 var options = {
     width: 500,
@@ -228,9 +199,16 @@ var options = {
 var url = "file://" + __dirname + "/index.html";
 var Application = (function (_super) {
     __extends(Application, _super);
-    function Application() {
-        _super.apply(this, arguments);
+    function Application(app, windowOptions, url, appName) {
+        _super.call(this, app, windowOptions, url, appName);
+        this.app = app;
+        this.previewWindow = undefined;
     }
+    Application.prototype.onReady = function () {
+        _super.prototype.onReady.call(this);
+        var previewUrl = "file://" + __dirname + "/preview.html";
+        this.previewWindow = new previewWindow.PreviewWindow({}, previewUrl);
+    };
     return Application;
 }(bApp.BaseApplication));
-var application = new Application(app, options, url);
+var application = new Application(app, options, url, 'YourTypes');

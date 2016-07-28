@@ -9,46 +9,35 @@ export class BaseBrowserWindow {
     this.window = new electron.BrowserWindow(options);
     this.window.loadURL(url);
 
-    this.window.on('closed', () => {
-      this.onClosed(); });
-    this.window.on('close', (event: Event) => {
-      this.onClose(event); });
-    this.window.on('page-title-updateed', (event: Event) => {
-      this.onPageTitleUpdated(event); });
-    this.window.on('unresponsive', () => {
-      this.onUnresponsive(); });
-    this.window.on('responsive', () => {
-      this.onResponsive(); });
-    this.window.on('blur', () => {
-      this.onBlur(); });
-    this.window.on('focus', () => {
-      this.onFocus(); });
-    this.window.on('maximize', () => {
-      this.onMaximize(); });
-    this.window.on('unmaximize', () => {
-      this.onUnmaximize(); });
-    this.window.on('minimize', () => {
-      this.onMinimize(); });
-    this.window.on('restore', () => {
-      this.onRestore(); });
-    this.window.on('resize', () => {
-      this.onResize(); });
-    this.window.on('move', () => {
-      this.onMove(); });
-    this.window.on('enter-full-screen', () => {
-      this.onEnterFullScreen(); });
-    this.window.on('leave-full-screen', () => {
-      this.onLeaveFullScreen(); });
-    this.window.on('enter-html-full-screen', () => {
-      this.onEnterHtmlFullScreen(); });
-    this.window.on('leave-html-full-screen', () => {
-      this.onLeaveHtmlFullScreen(); });
-    this.window.on('app-command', (event: Event, cmd: string) => {
-      this.onAppCommand(event, cmd); });
+    this.window.on('closed', () => { this.onClosed(); });
+    this.window.on('close',
+                   (event: Event) => { this.onClose(event); });
+    this.window.on('page-title-updateed',
+                   (event: Event) => { this.onPageTitleUpdated(event); });
+    this.window.on('unresponsive', () => { this.onUnresponsive(); });
+    this.window.on('responsive', () => { this.onResponsive(); });
+    this.window.on('blur', () => { this.onBlur(); });
+    this.window.on('focus', () => { this.onFocus(); });
+    this.window.on('maximize', () => { this.onMaximize(); });
+    this.window.on('unmaximize', () => { this.onUnmaximize(); });
+    this.window.on('minimize', () => { this.onMinimize(); });
+    this.window.on('restore', () => { this.onRestore(); });
+    this.window.on('resize', () => { this.onResize(); });
+    this.window.on('move', () => { this.onMove(); });
+    this.window.on('enter-full-screen',
+                   () => { this.onEnterFullScreen(); });
+    this.window.on('leave-full-screen',
+                   () => { this.onLeaveFullScreen(); });
+    this.window.on('enter-html-full-screen',
+                   () => { this.onEnterHtmlFullScreen(); });
+    this.window.on('leave-html-full-screen',
+                   () => { this.onLeaveHtmlFullScreen(); });
+    this.window.on('app-command',
+                   (event: Event, cmd: string) => {
+                     this.onAppCommand(event, cmd); });
 
     // OS X only
-    this.window.on('moved', () => {
-      this.onMoved(); });
+    this.window.on('moved', () => { this.onMoved(); });
   }
   onClosed() {
     this.window = undefined;

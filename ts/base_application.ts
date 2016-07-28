@@ -5,18 +5,18 @@ module base_app {
 
 import bWin = base_window;
 
-interface CertificateObject {
+export interface CertificateObject {
   data: Buffer,
   issueName: string
 }
 
-interface RequestObject {
+export interface RequestObject {
   method: string,
   url: string,
   referrer: string
 }
 
-interface AuthInfoObject {
+export interface AuthInfoObject {
   isProxy: boolean,
   scheme: string,
   host: string,
@@ -26,7 +26,7 @@ interface AuthInfoObject {
 
 export class BaseApplication {
   mainWindow: bWin.BaseBrowserWindow = undefined;
-
+  appName: string = 'ElectronApp';
   windowOptions: Electron.BrowserWindowOptions = {
     width: 800,
     height: 400,
@@ -37,70 +37,76 @@ export class BaseApplication {
   };
   startUrl: string = 'file://' + __dirname + '/index.html';
 
-  constructor(private app: Electron.App,
+  constructor(protected app: Electron.App,
               windowOptions?: Electron.BrowserWindowOptions,
-              url?: string) {
+              url?: string, appName?: string) {
+    this.appName = appName;
     if (windowOptions !== undefined) {
       this.windowOptions = windowOptions;
     }
     if (url !== undefined) {
       this.startUrl = url;
     }
-    this.app.on('will-finish-launching', () => {
-      this.onWillFinishLaunching(); });
-    this.app.on('ready', () => {
-      this.onReady(); });
-    this.app.on('window-all-closed', () => {
-      this.onWindowAllClosed(); });
-    this.app.on('before-quit', (event: string) => {
-      this.onBeforeQuit(event); });
-    this.app.on('will-quit', (event: string) => {
-      this.onWillQuit(event); });
-    this.app.on('quit', (event: string, exitCode: number) => {
-      this.onQuit(event, exitCode)});
-    this.app.on('browser-window-blur', (event: string, window: Electron.BrowserWindow) => {
-      this.onBrowserWindowBlur(event, window); });
-    this.app.on('browser-window-focus', (event: string, window: Electron.BrowserWindow) => {
-      this.onBrowserWindowFocus(event, window); });
-    this.app.on('browser-window-created', (event: string, window: Electron.BrowserWindow) => {
-      this.onBrowserWindowCreated(event, window); });
+    this.app.on('will-finish-launching',
+                () => { this.onWillFinishLaunching(); });
+    this.app.on('ready',
+                () => { this.onReady(); });
+    this.app.on('window-all-closed',
+                () => { this.onWindowAllClosed(); });
+    this.app.on('before-quit',
+                (event: string) => { this.onBeforeQuit(event); });
+    this.app.on('will-quit',
+                (event: string) => { this.onWillQuit(event); });
+    this.app.on('quit',
+                (event: string, exitCode: number) => {
+                  this.onQuit(event, exitCode)});
+    this.app.on('browser-window-blur',
+                (event: string, window: Electron.BrowserWindow) => {
+                  this.onBrowserWindowBlur(event, window); });
+    this.app.on('browser-window-focus',
+                (event: string, window: Electron.BrowserWindow) => {
+                  this.onBrowserWindowFocus(event, window); });
+    this.app.on('browser-window-created',
+                (event: string, window: Electron.BrowserWindow) => {
+                  this.onBrowserWindowCreated(event, window); });
     this.app.on('certificate-error',
-      (event: string,
-        webContents: Electron.WebContents,
-        url: string,
-        error: string,
-        certificate: CertificateObject,
-        callback: (verifyCertificate: boolean) => void) => {
-          this.onCertificateError(
-            event, webContents, url, error, certificate, callback);
-        });
+                (event: string,
+                 webContents: Electron.WebContents,
+                 url: string,
+                 error: string,
+                 certificate: CertificateObject,
+                 callback: (verifyCertificate: boolean) => void) => {
+                   this.onCertificateError(event, webContents,
+                                           url, error,
+                                           certificate, callback); });
     this.app.on('select-client-certificate',
-      (event: string,
-        webContents: Electron.WebContents,
-        url: string,
-        certificateList: CertificateObject[],
-        callback: (certificate: CertificateObject) => void) => {
-          this.onSelectClientCertificate(
-            event, webContents, url, certificateList, callback);
-        });
+                (event: string,
+                 webContents: Electron.WebContents,
+                 url: string,
+                 certificateList: CertificateObject[],
+                 callback: (certificate: CertificateObject) => void) => {
+                   this.onSelectClientCertificate(event, webContents, url,
+                                                  certificateList, callback); });
     this.app.on('login',
-      (event: string,
-        webContents: Electron.WebContents,
-        request: RequestObject,
-        authInfo: AuthInfoObject,
-        callback: (username: string) => void) => {
-          this.onLogin(
-            event, webContents, request, authInfo, callback);
-        });
-    this.app.on('gpu-process-crashed', () => {
-      this.onGpuProcessCrashed(); });
+                (event: string,
+                 webContents: Electron.WebContents,
+                 request: RequestObject,
+                 authInfo: AuthInfoObject,
+                 callback: (username: string) => void) => {
+                   this.onLogin(event, webContents, request,
+                                authInfo, callback); });
+    this.app.on('gpu-process-crashed',
+                () => { this.onGpuProcessCrashed(); });
     // OS X only
-    this.app.on('open-file', (event: string, path: string) => {
-      this.onOpenFile(event, path); });
-    this.app.on('open-url', (event: string, url: string) => {
-      this.onOpenURL(event, url); });
-    this.app.on('activate', (event: string, hasVisibleWindows: boolean) => {
-      this.onActivate(event, hasVisibleWindows); });
+    this.app.on('open-file',
+                (event: string, path: string) => {
+                  this.onOpenFile(event, path); });
+    this.app.on('open-url',
+                (event: string, url: string) => {
+                  this.onOpenURL(event, url); });
+    this.app.on('activate',
+                (event: string, hasVisibleWindows: boolean) => {
+                  this.onActivate(event, hasVisibleWindows); });
   }
 
   onWindowAllClosed() {
