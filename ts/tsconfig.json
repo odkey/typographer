@@ -17,6 +17,7 @@
     "base_browser_window.ts",
     "main_window.ts",
     "preview_window.ts",
+    "web/requires.ts",
     "web/main.ts",
     "web/preview.ts"
   ]
