@@ -15,10 +15,10 @@
     "main.ts",
     "base_application.ts",
     "base_browser_window.ts",
-    "main_window.ts",
+    "inspector_window.ts",
     "preview_window.ts",
     "web/requires.ts",
-    "web/main.ts",
+    "web/inspector.ts",
     "web/preview.ts"
   ]
 }

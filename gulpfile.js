@@ -30,7 +30,6 @@ gulp.task('clean:js', () => {
   ]);
 });
 
-// gulp.task('sass', ['clean:css', 'sass:impl']);
 gulp.task('sass', ['clean:css', 'sass:impl']);
 
 gulp.task('sass:impl', () => {
@@ -40,10 +39,6 @@ gulp.task('sass:impl', () => {
     .pipe(autoprefier())
     .pipe(sass())
     .pipe(gulp.dest(dist + '/web/css'));
-  // gulp.src(dist + '/web/css/**/*.css')
-  //   .pipe(plumber())
-  //   .pipe(rename({ suffix: '.min' }))
-  //   .pipe(gulp.dest(dist + '/web/css'));
 });
 
 gulp.task('cssmin', () => {
@@ -54,13 +49,15 @@ gulp.task('cssmin', () => {
     .pipe(gulp.dest(dist + '/web/css'));
 });
 
-gulp.task('ts', ['clean:js', 'ts:impl']);
+gulp.task('ts', ['clean:js', 'ts:impl'], () => {
+  console.log('Transpile TypeScript files as JavaScript files');
+});
 
 gulp.task('ts:impl', ['ts:electron', 'ts:web']);
 
 gulp.task('ts:electron', shell.task(
   'tsc -out dist/all.js ts/main.ts;'
-));
+));;
 
 gulp.task('ts:web', ['ts:web:preview', 'ts:web:main']);
 
@@ -69,8 +66,9 @@ gulp.task('ts:web:preview', shell.task(
 ));
 
 gulp.task('ts:web:main', shell.task(
-  'tsc -out dist/web/js/main.js ts/web/main.ts'
+  'tsc -out dist/web/js/inspector.js ts/web/inspector.ts'
 ));
+
 
 gulp.task('sass:watch', () => {
   gulp.watch('./sass/**/*.scss', ['sass']);

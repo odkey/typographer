@@ -1,11 +1,11 @@
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
 
-module main_window {
+module inspector_window {
 
 import bWin = base_window;
 
-export class MainWindow extends bWin.BaseBrowserWindow {
+export class InspectorWindow extends bWin.BaseBrowserWindow {
   constructor(options: Electron.BrowserWindowOptions, url: string) {
     super(options, url);
   }

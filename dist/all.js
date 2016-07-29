@@ -140,26 +140,26 @@ var base_app;
 })(base_app || (base_app = {})); // module base_app
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
-var main_window;
-(function (main_window) {
+var inspector_window;
+(function (inspector_window) {
     var bWin = base_window;
-    var MainWindow = (function (_super) {
-        __extends(MainWindow, _super);
-        function MainWindow(options, url) {
+    var InspectorWindow = (function (_super) {
+        __extends(InspectorWindow, _super);
+        function InspectorWindow(options, url) {
             _super.call(this, options, url);
         }
         // Accessors
-        MainWindow.prototype.setHtml = function (url) {
+        InspectorWindow.prototype.setHtml = function (url) {
             this.window.loadURL(url);
         };
-        MainWindow.prototype.onShow = function () {
+        InspectorWindow.prototype.onShow = function () {
             _super.prototype.onShow.call(this);
             console.log('main window - on show');
         };
-        return MainWindow;
+        return InspectorWindow;
     }(bWin.BaseBrowserWindow));
-    main_window.MainWindow = MainWindow;
-})(main_window || (main_window = {})); // module main_window
+    inspector_window.InspectorWindow = InspectorWindow;
+})(inspector_window || (inspector_window = {})); // module main_window
 /// <reference path="./requires.ts" />
 /// <reference path="./base_browser_window.ts" />
 var preview_window;
@@ -177,11 +177,11 @@ var preview_window;
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
 /// <reference path='./base_application.ts' />
-/// <reference path='./main_window.ts' />
+/// <reference path='./inspector_window.ts' />
 /// <reference path='./preview_window.ts' />
 var bApp = base_app;
 var bWin = base_window;
-var mainWin = main_window;
+var mainWin = inspector_window;
 var previewWin = preview_window;
 var app = electron.app;
 var Application = (function (_super) {
@@ -189,9 +189,9 @@ var Application = (function (_super) {
     function Application(app, appName) {
         _super.call(this, app, appName);
         this.app = app;
-        this.mainWindow = undefined;
-        this.mainWindowOptions = {};
-        this.mainWindowUrl = "file://" + __dirname + "/web/index.html";
+        this.inspectorWindow = undefined;
+        this.inspectorWindowOptions = {};
+        this.inspectorWindowUrl = "file://" + __dirname + "/web/inspector.html";
         this.previewWindow = undefined;
         this.previewWindowOptions = {};
         this.previewWindowUrl = "file://" + __dirname + "/web/preview.html";
@@ -199,12 +199,12 @@ var Application = (function (_super) {
     Application.prototype.onReady = function () {
         _super.prototype.onReady.call(this);
         // Init browser windows - main
-        this.mainWindowOptions = {
+        this.inspectorWindowOptions = {
             width: 500, height: 800, x: 0, y: 0, transparent: false,
             webPreferences: { nodeIntegration: false }
         };
-        this.mainWindow =
-            new main_window.MainWindow(this.mainWindowOptions, this.mainWindowUrl);
+        this.inspectorWindow =
+            new inspector_window.InspectorWindow(this.inspectorWindowOptions, this.inspectorWindowUrl);
         // Init browser windows - preview
         this.previewWindowOptions = {
             width: 800, height: 1200, x: 500, y: 0, transparent: false,
