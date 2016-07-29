@@ -1,39 +1,51 @@
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
 /// <reference path='./base_application.ts' />
-/// <reference path="./preview_window.ts"/>
+
+/// <reference path='./main_window.ts' />
+/// <reference path='./preview_window.ts' />
 
 import bApp = base_app;
 import bWin = base_window;
-import previewWindow = preview_window;
+import mainWin = main_window;
+import previewWin = preview_window;
 
 var app: Electron.App = electron.app;
 
-const options: Electron.BrowserWindowOptions = {
-  width: 500,
-  height: 300,
-  minWidth: 200,
-  minHeight: 150,
-  acceptFirstMouse: true,
-  titleBarStyle: 'default'
-};
-
-const url: string = `file://${ __dirname }/index.html`;
-
 class Application extends bApp.BaseApplication {
-  previewWindow: previewWindow.PreviewWindow = undefined;
+  mainWindow: main_window.MainWindow  = undefined;
+  mainWindowOptions: Electron.BrowserWindowOptions = {};
+  mainWindowUrl: string = `file://${ __dirname }/web/index.html`;
+  previewWindow: preview_window.PreviewWindow = undefined;
+  previewWindowOptions: Electron.BrowserWindowOptions = {};
+  previewWindowUrl: string = `file://${ __dirname }/web/preview.html`;
 
-  constructor(protected app: Electron.App,
-              windowOptions?: Electron.BrowserWindowOptions,
-              url?: string, appName?: string) {
-    super(app, windowOptions, url, appName);
+  constructor(protected app: Electron.App, appName?: string) {
+    super(app, appName);
   }
 
   onReady() {
     super.onReady();
-    const previewUrl: string = `file://${ __dirname }/preview.html`
-    this.previewWindow = new previewWindow.PreviewWindow({}, previewUrl);
+    // Init browser windows - main
+    this.mainWindowOptions = {
+      width: 500, height: 800, x: 0, y: 0, transparent: false,
+      webPreferences: { nodeIntegration: false }
+    };
+    this.mainWindow =
+      new main_window.MainWindow(this.mainWindowOptions, this.mainWindowUrl);
+    // Init browser windows - preview
+    this.previewWindowOptions = {
+      width: 800, height: 1200, x: 500, y: 0, transparent: false,
+      webPreferences: { nodeIntegration: false }
+    };
+    this.previewWindow =
+      new previewWin.PreviewWindow(this.previewWindowOptions,
+                                   this.previewWindowUrl);
+  }
+
+  private loadHTML() {
+
   }
 }
 
-var application: Application = new Application(app, options, url, 'YourTypes');
+var application: Application = new Application(app, 'YourTypes');

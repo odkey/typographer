@@ -15,6 +15,9 @@
     "main.ts",
     "base_application.ts",
     "base_browser_window.ts",
-    "preview_window.ts"
+    "main_window.ts",
+    "preview_window.ts",
+    "web/main.ts",
+    "web/preview.ts"
   ]
 }

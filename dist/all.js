@@ -21,6 +21,9 @@ var base_window;
             this.window.on('responsive', function () { _this.onResponsive(); });
             this.window.on('blur', function () { _this.onBlur(); });
             this.window.on('focus', function () { _this.onFocus(); });
+            this.window.on('show', function () { _this.onShow(); });
+            this.window.on('hide', function () { _this.onHide(); });
+            this.window.on('ready-to-show', function () { _this.onReadyToShow(); });
             this.window.on('maximize', function () { _this.onMaximize(); });
             this.window.on('unmaximize', function () { _this.onUnmaximize(); });
             this.window.on('minimize', function () { _this.onMinimize(); });
@@ -37,15 +40,16 @@ var base_window;
             // OS X only
             this.window.on('moved', function () { _this.onMoved(); });
         }
-        BaseBrowserWindow.prototype.onClosed = function () {
-            this.window = undefined;
-        };
+        BaseBrowserWindow.prototype.onClosed = function () { this.window = undefined; };
         BaseBrowserWindow.prototype.onClose = function (event) { };
         BaseBrowserWindow.prototype.onPageTitleUpdated = function (event) { };
         BaseBrowserWindow.prototype.onUnresponsive = function () { };
         BaseBrowserWindow.prototype.onResponsive = function () { };
         BaseBrowserWindow.prototype.onBlur = function () { };
         BaseBrowserWindow.prototype.onFocus = function () { };
+        BaseBrowserWindow.prototype.onShow = function () { };
+        BaseBrowserWindow.prototype.onHide = function () { };
+        BaseBrowserWindow.prototype.onReadyToShow = function () { };
         BaseBrowserWindow.prototype.onMaximize = function () { };
         BaseBrowserWindow.prototype.onUnmaximize = function () { };
         BaseBrowserWindow.prototype.onMinimize = function () { };
@@ -66,29 +70,12 @@ var base_window;
 /// <reference path='./base_browser_window.ts' />
 var base_app;
 (function (base_app) {
-    var bWin = base_window;
     var BaseApplication = (function () {
-        function BaseApplication(app, windowOptions, url, appName) {
+        function BaseApplication(app, appName) {
             var _this = this;
             this.app = app;
-            this.mainWindow = undefined;
             this.appName = 'ElectronApp';
-            this.windowOptions = {
-                width: 800,
-                height: 400,
-                minWidth: 500,
-                minHeight: 200,
-                acceptFirstMouse: true,
-                titleBarStyle: 'default'
-            };
-            this.startUrl = 'file://' + __dirname + '/index.html';
             this.appName = appName;
-            if (windowOptions !== undefined) {
-                this.windowOptions = windowOptions;
-            }
-            if (url !== undefined) {
-                this.startUrl = url;
-            }
             this.app.on('will-finish-launching', function () { _this.onWillFinishLaunching(); });
             this.app.on('ready', function () { _this.onReady(); });
             this.app.on('window-all-closed', function () { _this.onWindowAllClosed(); });
@@ -132,22 +119,7 @@ var base_app;
                 this.app.quit();
             }
         };
-        BaseApplication.prototype.onReady = function () {
-            var mythis = this;
-            var myBrowserWindowClass = (function (_super) {
-                __extends(class_1, _super);
-                function class_1() {
-                    _super.apply(this, arguments);
-                }
-                class_1.prototype.onClosed = function () {
-                    mythis.mainWindow = undefined;
-                    _super.prototype.onClosed.call(this);
-                };
-                return class_1;
-            }(bWin.BaseBrowserWindow));
-            this.mainWindow =
-                new myBrowserWindowClass(this.windowOptions, this.startUrl);
-        };
+        BaseApplication.prototype.onReady = function () { };
         BaseApplication.prototype.onWillFinishLaunching = function () { };
         BaseApplication.prototype.onBeforeQuit = function (event) { };
         BaseApplication.prototype.onWillQuit = function (event) { };
@@ -158,14 +130,36 @@ var base_app;
         BaseApplication.prototype.onBrowserWindowBlur = function (event, window) { };
         BaseApplication.prototype.onBrowserWindowFocus = function (event, window) { };
         BaseApplication.prototype.onBrowserWindowCreated = function (event, window) { };
+        BaseApplication.prototype.onLogin = function (event, webContents, request, authInfo, callback) { };
         BaseApplication.prototype.onCertificateError = function (event, webContents, url, error, certificate, callback) { };
         BaseApplication.prototype.onSelectClientCertificate = function (event, webContents, url, certificateList, callback) { };
-        BaseApplication.prototype.onLogin = function (event, webContents, request, authInfo, callback) { };
         BaseApplication.prototype.onGpuProcessCrashed = function () { };
         return BaseApplication;
     }());
     base_app.BaseApplication = BaseApplication;
 })(base_app || (base_app = {})); // module base_app
+/// <reference path='./requires.ts' />
+/// <reference path='./base_browser_window.ts' />
+var main_window;
+(function (main_window) {
+    var bWin = base_window;
+    var MainWindow = (function (_super) {
+        __extends(MainWindow, _super);
+        function MainWindow(options, url) {
+            _super.call(this, options, url);
+        }
+        // Accessors
+        MainWindow.prototype.setHtml = function (url) {
+            this.window.loadURL(url);
+        };
+        MainWindow.prototype.onShow = function () {
+            _super.prototype.onShow.call(this);
+            console.log('main window - on show');
+        };
+        return MainWindow;
+    }(bWin.BaseBrowserWindow));
+    main_window.MainWindow = MainWindow;
+})(main_window || (main_window = {})); // module main_window
 /// <reference path="./requires.ts" />
 /// <reference path="./base_browser_window.ts" />
 var preview_window;
@@ -183,32 +177,44 @@ var preview_window;
 /// <reference path='./requires.ts' />
 /// <reference path='./base_browser_window.ts' />
 /// <reference path='./base_application.ts' />
-/// <reference path="./preview_window.ts"/>
+/// <reference path='./main_window.ts' />
+/// <reference path='./preview_window.ts' />
 var bApp = base_app;
 var bWin = base_window;
-var previewWindow = preview_window;
+var mainWin = main_window;
+var previewWin = preview_window;
 var app = electron.app;
-var options = {
-    width: 500,
-    height: 300,
-    minWidth: 200,
-    minHeight: 150,
-    acceptFirstMouse: true,
-    titleBarStyle: 'default'
-};
-var url = "file://" + __dirname + "/index.html";
 var Application = (function (_super) {
     __extends(Application, _super);
-    function Application(app, windowOptions, url, appName) {
-        _super.call(this, app, windowOptions, url, appName);
+    function Application(app, appName) {
+        _super.call(this, app, appName);
         this.app = app;
+        this.mainWindow = undefined;
+        this.mainWindowOptions = {};
+        this.mainWindowUrl = "file://" + __dirname + "/web/index.html";
         this.previewWindow = undefined;
+        this.previewWindowOptions = {};
+        this.previewWindowUrl = "file://" + __dirname + "/web/preview.html";
     }
     Application.prototype.onReady = function () {
         _super.prototype.onReady.call(this);
-        var previewUrl = "file://" + __dirname + "/preview.html";
-        this.previewWindow = new previewWindow.PreviewWindow({}, previewUrl);
+        // Init browser windows - main
+        this.mainWindowOptions = {
+            width: 500, height: 800, x: 0, y: 0, transparent: false,
+            webPreferences: { nodeIntegration: false }
+        };
+        this.mainWindow =
+            new main_window.MainWindow(this.mainWindowOptions, this.mainWindowUrl);
+        // Init browser windows - preview
+        this.previewWindowOptions = {
+            width: 800, height: 1200, x: 500, y: 0, transparent: false,
+            webPreferences: { nodeIntegration: false }
+        };
+        this.previewWindow =
+            new previewWin.PreviewWindow(this.previewWindowOptions, this.previewWindowUrl);
+    };
+    Application.prototype.loadHTML = function () {
     };
     return Application;
 }(bApp.BaseApplication));
-var application = new Application(app, options, url, 'YourTypes');
+var application = new Application(app, 'YourTypes');

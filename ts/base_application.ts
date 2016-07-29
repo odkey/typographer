@@ -25,28 +25,10 @@ export interface AuthInfoObject {
 }
 
 export class BaseApplication {
-  mainWindow: bWin.BaseBrowserWindow = undefined;
   appName: string = 'ElectronApp';
-  windowOptions: Electron.BrowserWindowOptions = {
-    width: 800,
-    height: 400,
-    minWidth: 500,
-    minHeight: 200,
-    acceptFirstMouse: true,
-    titleBarStyle: 'default'
-  };
-  startUrl: string = 'file://' + __dirname + '/index.html';
 
-  constructor(protected app: Electron.App,
-              windowOptions?: Electron.BrowserWindowOptions,
-              url?: string, appName?: string) {
+  constructor(protected app: Electron.App, appName?: string) {
     this.appName = appName;
-    if (windowOptions !== undefined) {
-      this.windowOptions = windowOptions;
-    }
-    if (url !== undefined) {
-      this.startUrl = url;
-    }
     this.app.on('will-finish-launching',
                 () => { this.onWillFinishLaunching(); });
     this.app.on('ready',
@@ -108,25 +90,12 @@ export class BaseApplication {
                 (event: string, hasVisibleWindows: boolean) => {
                   this.onActivate(event, hasVisibleWindows); });
   }
-
   onWindowAllClosed() {
     if (process.platform != 'darwin') {
       this.app.quit();
     }
   }
-
-  onReady() {
-    const mythis = this;
-    const myBrowserWindowClass = class extends bWin.BaseBrowserWindow {
-      onClosed() {
-        mythis.mainWindow = undefined;
-        super.onClosed();
-      }
-    };
-    this.mainWindow =
-      new myBrowserWindowClass(this.windowOptions, this.startUrl);
-  }
-
+  onReady() {}
   onWillFinishLaunching() {}
   onBeforeQuit(event: string) {}
   onWillQuit(event: string) {}
@@ -137,6 +106,11 @@ export class BaseApplication {
   onBrowserWindowBlur(event: string, window: Electron.BrowserWindow) {}
   onBrowserWindowFocus(event: string, window: Electron.BrowserWindow) {}
   onBrowserWindowCreated(event: string, window: Electron.BrowserWindow) {}
+  onLogin(event: string,
+          webContents: Electron.WebContents,
+          request: RequestObject,
+          authInfo: AuthInfoObject,
+          callback: (username: string) => void) {}
   onCertificateError(event: string,
                      webContents: Electron.WebContents,
                      url: string,
@@ -148,11 +122,7 @@ export class BaseApplication {
                             url: string,
                             certificateList: CertificateObject[],
                             callback: (certificate: CertificateObject) => void) {}
-  onLogin(event: string,
-          webContents: Electron.WebContents,
-          request: RequestObject,
-          authInfo: AuthInfoObject,
-          callback: (username: string) => void) {}
+
   onGpuProcessCrashed() {}
 }
 

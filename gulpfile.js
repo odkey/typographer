@@ -29,11 +29,25 @@ gulp.task('cssmin', () => {
   gulp.src(dist + '/css/**/*.css')
     .pipe(plumber())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(dist + '/css'));
+    .pipe(gulp.dest(dist + '/web/css'));
 });
 
 gulp.task('ts', shell.task(
   'tsc -out dist/all.js ts/main.ts;'
+));
+
+gulp.task('ts:electron', shell.task(
+  'tsc -out dist/all.js ts/main.ts;'
+));
+
+gulp.task('ts:web', ['ts:web:preview', 'ts:web:main']);
+
+gulp.task('ts:web:preview', shell.task(
+  'tsc -out dist/js/preview.js ts/web/preview.ts'
+));
+
+gulp.task('ts:web:main', shell.task(
+  'tsc -out dist/js/main.js ts/web/main.ts'
 ));
 
 gulp.task('sass:watch', () => {

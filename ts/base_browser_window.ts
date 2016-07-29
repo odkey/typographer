@@ -18,6 +18,9 @@ export class BaseBrowserWindow {
     this.window.on('responsive', () => { this.onResponsive(); });
     this.window.on('blur', () => { this.onBlur(); });
     this.window.on('focus', () => { this.onFocus(); });
+    this.window.on('show', () => { this.onShow(); });
+    this.window.on('hide', () => { this.onHide(); });
+    this.window.on('ready-to-show', () => { this.onReadyToShow(); });
     this.window.on('maximize', () => { this.onMaximize(); });
     this.window.on('unmaximize', () => { this.onUnmaximize(); });
     this.window.on('minimize', () => { this.onMinimize(); });
@@ -39,16 +42,16 @@ export class BaseBrowserWindow {
     // OS X only
     this.window.on('moved', () => { this.onMoved(); });
   }
-  onClosed() {
-    this.window = undefined;
-  }
-
+  onClosed() { this.window = undefined; }
   onClose(event: Event) {}
   onPageTitleUpdated(event: Event) {}
   onUnresponsive() {}
   onResponsive() {}
   onBlur() {}
   onFocus() {}
+  onShow() {}
+  onHide() {}
+  onReadyToShow() {}
   onMaximize() {}
   onUnmaximize() {}
   onMinimize() {}
