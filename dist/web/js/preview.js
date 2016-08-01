@@ -25,6 +25,8 @@ var Preview = (function () {
         this.ipc = electron.ipcRenderer;
         thisPreview = this;
         this.setAcceptedAsyncMessageReaction();
+        this.webview = document.getElementById('webview');
+        this.onWebviewReady();
     }
     Preview.prototype.setAcceptedAsyncMessageReaction = function () {
         this.ipc.on(MainToPreviewAsyncRequestToLoadHTML, this.acceptAsyncRequestToLoadingHTML);
@@ -36,10 +38,35 @@ var Preview = (function () {
         }
         // thisPreview.updateSubWebview(args[0]);
         // $('#sub-webview').attr('src', args[0]);
-        ;
     };
     Preview.prototype.updateSubWebview = function (url) {
         $('#sub-webview').load(url);
+    };
+    Preview.prototype.onWebviewReady = function () {
+        var _this = this;
+        thisPreview.webview.addEventListener('dom-ready', function () {
+            _this.addVisitPageEvent();
+            _this.modifyURL();
+        });
+    };
+    Preview.prototype.addVisitPageEvent = function () {
+        var $button = $('.control-menu>input.visit-url');
+        $button.click(function (event) {
+            var $url = $('.control-menu>input.url-field');
+            if ($url.val().indexOf('http://') != 0 &&
+                $url.val().indexOf('https://') != 0 &&
+                $url.val().indexOf('file://') != 0) {
+                thisPreview.webview.loadURL("http://" + $url.val());
+            }
+            else {
+                thisPreview.webview.loadURL($url.val());
+            }
+        });
+    };
+    Preview.prototype.modifyURL = function () {
+        var $url = thisPreview.webview.getURL();
+        console.log("Visit - " + $url);
+        $('.control-menu>input.url-field').val($url);
     };
     return Preview;
 }());
