@@ -12,8 +12,14 @@ var MainToInspectorAsyncReplyForSendingHTMLNameToPreview = 'MainToInspector.Aync
 var MainToPreviewAsyncRequestToLoadHTML = 'MainToPreview.AsyncRequest.LoadHTML';
 var PreviewToMainAsyncReplyForLoadingHTML = 'PreviewToMain.AsyncReply.LoadingHTML';
 var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.LoadingURL';
-var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysePreview';
+var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
+var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
+var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
+var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
+var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
 /// <reference path="./requires.ts"/>
 var base_window;
 (function (base_window) {
@@ -220,7 +226,7 @@ var Application = (function (_super) {
             new inspector_window.InspectorWindow(this.inspectorWindowOptions, this.inspectorWindowUrl);
         // Init browser windows - preview
         this.previewWindowOptions = {
-            width: 800, height: 1200, x: 500, y: 0, transparent: false,
+            width: 1200, height: 1200, x: 500, y: 0, transparent: false,
             webPreferences: { nodeIntegration: true }
         };
         this.previewWindow =
@@ -233,8 +239,9 @@ var Application = (function (_super) {
         this.ipc.on(InspectorToMainAsyncRequestToSendHTMLNameToPreview, this.acceptAsyncRequestToSendHTMLNameToPreview);
         this.ipc.on(PreviewToMainAsyncReplyForLoadingHTML, this.acceptAsyncReplyForLoadingHTML);
         this.ipc.on(InspectorToMainAsyncRequestToLoadURL, this.acceptAsyncRequestToLoadURL);
-        this.ipc.on(InspectorToMainAsyncRequestToAnalysePreview, this.acceptAsyncRequestToAnalysePreview);
         this.ipc.on(InspectorToMainAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
+        this.ipc.on(InspectorToMainAsyncRequestToShowPreviewDevTool, this.acceptAsyncRequestToShowPreviewDevTool);
+        this.ipc.on(InspectToMainAsyncRequestToReturnWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
     };
     Application.prototype.setAcceptedSyncMessageReaction = function () {
         // Use no synchronous communication event
@@ -281,12 +288,21 @@ var Application = (function (_super) {
             console.log('Error loading a html on the preview page');
         }
     };
-    Application.prototype.acceptAsyncRequestToAnalysePreview = function (event) {
+    Application.prototype.acceptAsyncRequestToShowPreviewDevTool = function (event) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
+        thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToShowDevTool, '');
         console.log('Start to analyse');
+    };
+    Application.prototype.acceptAsyncRequestToReturnWebviewHTML = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToReturnWebviewHTML, '');
+        console.log('Send a request webview to return the HTML source');
     };
     Application.prototype.acceptAsyncRequestToExportModifiedHTML = function (event) {
         var args = [];

@@ -21,6 +21,7 @@
     "ipc_messages.ts",
     "web/requires.ts",
     "web/inspector.ts",
-    "web/preview.ts"
+    "web/preview.ts",
+    "web/webview.ts"
   ]
 }

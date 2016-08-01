@@ -9,9 +9,10 @@ class Inspector {
   ipc: Electron.IpcRenderer = electron.ipcRenderer;
   constructor() {
     this.addURLSendEvent();
-    this.addAnalyseRequestEvent();
+    this.addShowDevToolRequestEvent();
     this.addSelectDestinationEvent();
     this.addExportHTMLRequestEvent();
+    this.addWebviewHTMLRequestEvent();
   }
   private addURLSendEvent() {
     let $button: JQuery = $('input#send-url');
@@ -22,11 +23,18 @@ class Inspector {
       return 0;
     });
   }
-  private addAnalyseRequestEvent() {
-    let $button: JQuery = $('input#analyse');
+  private addShowDevToolRequestEvent() {
+    let $button: JQuery = $('input.inspect');
     $button.click((event) => {
-      this.ipc.send(InspectorToMainAsyncRequestToAnalysePreview, '');
-      console.log('Send analyse preview request to main process');
+      this.ipc.send(InspectorToMainAsyncRequestToShowPreviewDevTool, '');
+      console.log('Send inspect preview request to main process');
+    });
+  }
+  private addWebviewHTMLRequestEvent() {
+    let $button: JQuery = $('input.analyse');
+    $button.click((event) => {
+      this.ipc.send(InspectToMainAsyncRequestToReturnWebviewHTML, '');
+      console.log('Send webview html request to main process');
     });
   }
   private addSelectDestinationEvent() {

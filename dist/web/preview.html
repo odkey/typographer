@@ -11,9 +11,13 @@
     <div class="control-menu">
       <input type="text" class="url-field" name="url-field" value="" size="100">
       <input type="button" class="visit-url" name="visit-url" value="Visit">
+      <div class="undo-next">
+        <div class="undo-button"><</div>
+        <div class="next-button">></div>
+      </div>
     </div>
 
-    <webview id="webview" src="https://google.com/" style="width: 100%;height: 1100px;"></webview>
+    <webview id="webview" src="https://google.com/" preload="./js/webview.js" style="width: 100%;height: 1100px;"></webview>
     <script type="text/javascript" src="js/preview.js"></script>
   </body>
 </html>

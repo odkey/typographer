@@ -12,8 +12,14 @@ var MainToInspectorAsyncReplyForSendingHTMLNameToPreview = 'MainToInspector.Aync
 var MainToPreviewAsyncRequestToLoadHTML = 'MainToPreview.AsyncRequest.LoadHTML';
 var PreviewToMainAsyncReplyForLoadingHTML = 'PreviewToMain.AsyncReply.LoadingHTML';
 var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.LoadingURL';
-var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysePreview';
+var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
+var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
+var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
+var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
+var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
 /// <reference path='../requires.ts' />
 /// <reference path='./requires.ts' />
 /// <reference path='../ipc_messages.ts' />
@@ -23,9 +29,10 @@ var Inspector = (function () {
     function Inspector() {
         this.ipc = electron.ipcRenderer;
         this.addURLSendEvent();
-        this.addAnalyseRequestEvent();
+        this.addShowDevToolRequestEvent();
         this.addSelectDestinationEvent();
         this.addExportHTMLRequestEvent();
+        this.addWebviewHTMLRequestEvent();
     }
     Inspector.prototype.addURLSendEvent = function () {
         var _this = this;
@@ -37,12 +44,20 @@ var Inspector = (function () {
             return 0;
         });
     };
-    Inspector.prototype.addAnalyseRequestEvent = function () {
+    Inspector.prototype.addShowDevToolRequestEvent = function () {
         var _this = this;
-        var $button = $('input#analyse');
+        var $button = $('input.inspect');
         $button.click(function (event) {
-            _this.ipc.send(InspectorToMainAsyncRequestToAnalysePreview, '');
-            console.log('Send analyse preview request to main process');
+            _this.ipc.send(InspectorToMainAsyncRequestToShowPreviewDevTool, '');
+            console.log('Send inspect preview request to main process');
+        });
+    };
+    Inspector.prototype.addWebviewHTMLRequestEvent = function () {
+        var _this = this;
+        var $button = $('input.analyse');
+        $button.click(function (event) {
+            _this.ipc.send(InspectToMainAsyncRequestToReturnWebviewHTML, '');
+            console.log('Send webview html request to main process');
         });
     };
     Inspector.prototype.addSelectDestinationEvent = function () {

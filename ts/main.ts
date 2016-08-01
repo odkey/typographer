@@ -41,7 +41,7 @@ class Application extends bApp.BaseApplication {
                                            this.inspectorWindowUrl);
     // Init browser windows - preview
     this.previewWindowOptions = {
-      width: 800, height: 1200, x: 500, y: 0, transparent: false,
+      width: 1200, height: 1200, x: 500, y: 0, transparent: false,
       webPreferences: { nodeIntegration: true }
     };
     this.previewWindow =
@@ -59,10 +59,12 @@ class Application extends bApp.BaseApplication {
                 this.acceptAsyncReplyForLoadingHTML);
     this.ipc.on(InspectorToMainAsyncRequestToLoadURL,
                 this.acceptAsyncRequestToLoadURL);
-    this.ipc.on(InspectorToMainAsyncRequestToAnalysePreview,
-                this.acceptAsyncRequestToAnalysePreview);
     this.ipc.on(InspectorToMainAsyncRequestToExportModifiedHTML,
                 this.acceptAsyncRequestToExportModifiedHTML);
+    this.ipc.on(InspectorToMainAsyncRequestToShowPreviewDevTool,
+                this.acceptAsyncRequestToShowPreviewDevTool);
+    this.ipc.on(InspectToMainAsyncRequestToReturnWebviewHTML,
+                this.acceptAsyncRequestToReturnWebviewHTML)
   }
   private setAcceptedSyncMessageReaction() {
     // Use no synchronous communication event
@@ -103,9 +105,17 @@ class Application extends bApp.BaseApplication {
       console.log('Error loading a html on the preview page');
     }
   }
-  private acceptAsyncRequestToAnalysePreview(
+  private acceptAsyncRequestToShowPreviewDevTool(
       event: Electron.IpcMainEvent, ...args: string[]) {
+    thisClass.previewWindow.window.webContents.send(
+      MainToPreviewAsyncRequestToShowDevTool, '');
     console.log('Start to analyse');
+  }
+  private acceptAsyncRequestToReturnWebviewHTML(
+      event: Electron.IpcMainEvent, ...args: string[]) {
+    thisClass.previewWindow.window.webContents.send(
+      MainToPreviewAsyncRequestToReturnWebviewHTML, '');
+    console.log('Send a request webview to return the HTML source');
   }
   private acceptAsyncRequestToExportModifiedHTML(
       event: Electron.IpcMainEvent, ...args: string[]) {
