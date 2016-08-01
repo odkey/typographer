@@ -24,6 +24,7 @@ var Inspector = (function () {
         this.ipc = electron.ipcRenderer;
         this.addURLSendEvent();
         this.addAnalyseRequestEvent();
+        this.addSelectDestinationEvent();
         this.addExportHTMLRequestEvent();
     }
     Inspector.prototype.addURLSendEvent = function () {
@@ -44,11 +45,34 @@ var Inspector = (function () {
             console.log('Send analyse preview request to main process');
         });
     };
+    Inspector.prototype.addSelectDestinationEvent = function () {
+        var $button = $('.export-html>input.destination-select');
+        $button.click(function (event) {
+            var focusedWindow = BrowserWindow.getFocusedWindow();
+            var options = {
+                title: 'Select Destination',
+                properties: ['openDirectory', 'createDirectory'] };
+            dialog.showOpenDialog(focusedWindow, options, function (directories) {
+                if (directories.length != 1) {
+                    console.log('Illegal input - Select just a directory');
+                    return;
+                }
+                var $destination = $('.export-html>input.export-name');
+                $destination.val(directories[0] + "/" + $destination.val());
+                console.log('Destination selected');
+            });
+        });
+    };
     Inspector.prototype.addExportHTMLRequestEvent = function () {
         var _this = this;
-        var $button = $('input#export');
+        var $button = $('.export-html>input.export-trigger');
         $button.click(function (event) {
-            _this.ipc.send(InspectorToMainAsyncRequestToExportModifiedHTML, '');
+            var $filepath = $('.export-html>input.export-name');
+            if ($filepath.val().indexOf('.html') != $filepath.val().length - 5) {
+                $filepath.val($filepath.val() + ".html");
+                console.log('Added extension - .html');
+            }
+            _this.ipc.send(InspectorToMainAsyncRequestToExportModifiedHTML, $filepath.val());
             console.log('Export modified HTML request to main process');
         });
     };

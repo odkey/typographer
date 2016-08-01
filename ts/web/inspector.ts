@@ -10,6 +10,7 @@ class Inspector {
   constructor() {
     this.addURLSendEvent();
     this.addAnalyseRequestEvent();
+    this.addSelectDestinationEvent();
     this.addExportHTMLRequestEvent();
   }
   private addURLSendEvent() {
@@ -28,10 +29,35 @@ class Inspector {
       console.log('Send analyse preview request to main process');
     });
   }
-  private addExportHTMLRequestEvent() {
-    let $button: JQuery = $('input#export');
+  private addSelectDestinationEvent() {
+    let $button: JQuery = $('.export-html>input.destination-select');
     $button.click((event) => {
-      this.ipc.send(InspectorToMainAsyncRequestToExportModifiedHTML, '');
+      let focusedWindow: Electron.BrowserWindow =
+        BrowserWindow.getFocusedWindow();
+      let options: Electron.OpenDialogOptions = {
+        title: 'Select Destination',
+        properties: ['openDirectory', 'createDirectory'] };
+      dialog.showOpenDialog(focusedWindow, options, (directories: string[]) => {
+        if (directories.length != 1) {
+          console.log('Illegal input - Select just a directory');
+          return;
+        }
+        let $destination: JQuery = $('.export-html>input.export-name');
+        $destination.val(`${ directories[0]}/${$destination.val()}`);
+        console.log('Destination selected');
+      });
+    });
+  }
+  private addExportHTMLRequestEvent() {
+    let $button: JQuery = $('.export-html>input.export-trigger');
+    $button.click((event) => {
+      let $filepath: JQuery = $('.export-html>input.export-name');
+      if ($filepath.val().indexOf('.html') != $filepath.val().length -5) {
+        $filepath.val(`${ $filepath.val() }.html`);
+        console.log('Added extension - .html');
+      }
+      this.ipc.send(InspectorToMainAsyncRequestToExportModifiedHTML,
+        $filepath.val());
       console.log('Export modified HTML request to main process');
     });
   }

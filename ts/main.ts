@@ -42,7 +42,7 @@ class Application extends bApp.BaseApplication {
     // Init browser windows - preview
     this.previewWindowOptions = {
       width: 800, height: 1200, x: 500, y: 0, transparent: false,
-      webPreferences: { nodeIntegration: false }
+      webPreferences: { nodeIntegration: true }
     };
     this.previewWindow =
       new previewWin.PreviewWindow(this.previewWindowOptions,
@@ -65,6 +65,7 @@ class Application extends bApp.BaseApplication {
                 this.acceptAsyncRequestToExportModifiedHTML);
   }
   private setAcceptedSyncMessageReaction() {
+    // Use no synchronous communication event
   }
   private acceptAsyncRequestToLoadURL(
       event: Electron.IpcMainEvent, ...args: string[]) {
@@ -109,7 +110,13 @@ class Application extends bApp.BaseApplication {
   private acceptAsyncRequestToExportModifiedHTML(
       event: Electron.IpcMainEvent, ...args: string[]) {
     console.log('Export modified HTML');
-    console.log(thisClass.previewWindow.window.webContents);
+    thisClass.previewWindow.window.webContents.savePage(
+      args[0], 'HTMLComplete', (error) => {
+        if (!error) {
+          console.log(`Saved successfully - ${ args[0] }`);
+        }
+        else { console.log(`error - ${ error }`); }
+      });
   }
 }
 

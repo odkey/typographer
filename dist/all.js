@@ -221,7 +221,7 @@ var Application = (function (_super) {
         // Init browser windows - preview
         this.previewWindowOptions = {
             width: 800, height: 1200, x: 500, y: 0, transparent: false,
-            webPreferences: { nodeIntegration: false }
+            webPreferences: { nodeIntegration: true }
         };
         this.previewWindow =
             new previewWin.PreviewWindow(this.previewWindowOptions, this.previewWindowUrl);
@@ -237,6 +237,7 @@ var Application = (function (_super) {
         this.ipc.on(InspectorToMainAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
     };
     Application.prototype.setAcceptedSyncMessageReaction = function () {
+        // Use no synchronous communication event
     };
     Application.prototype.acceptAsyncRequestToLoadURL = function (event) {
         var args = [];
@@ -293,7 +294,14 @@ var Application = (function (_super) {
             args[_i - 1] = arguments[_i];
         }
         console.log('Export modified HTML');
-        console.log(thisClass.previewWindow.window.webContents);
+        thisClass.previewWindow.window.webContents.savePage(args[0], 'HTMLComplete', function (error) {
+            if (!error) {
+                console.log("Saved successfully - " + args[0]);
+            }
+            else {
+                console.log("error - " + error);
+            }
+        });
     };
     return Application;
 }(bApp.BaseApplication));
