@@ -6,6 +6,14 @@ var __extends = (this && this.__extends) || function (d, b) {
 /// <reference path='../typings/index.d.ts' />
 var electron = require('electron');
 var jquery = require('jquery');
+// Message channels
+var InspectorToMainAsyncRequestToSendHTMLNameToPreview = 'InspectorToMain.AyncRequest.SendHTMLNameToPreview';
+var MainToInspectorAsyncReplyForSendingHTMLNameToPreview = 'MainToInspector.AyncReply.SendingHTMLNameToPreview';
+var MainToPreviewAsyncRequestToLoadHTML = 'MainToPreview.AsyncRequest.LoadHTML';
+var PreviewToMainAsyncReplyForLoadingHTML = 'PreviewToMain.AsyncReply.LoadingHTML';
+var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.LoadingURL';
+var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysePreview';
+var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
 /// <reference path="./requires.ts"/>
 var base_window;
 (function (base_window) {
@@ -40,6 +48,7 @@ var base_window;
             // OS X only
             this.window.on('moved', function () { _this.onMoved(); });
         }
+        BaseBrowserWindow.prototype.loadURL = function (url) { this.window.loadURL(url); };
         BaseBrowserWindow.prototype.onClosed = function () { this.window = undefined; };
         BaseBrowserWindow.prototype.onClose = function (event) { };
         BaseBrowserWindow.prototype.onPageTitleUpdated = function (event) { };
@@ -175,6 +184,7 @@ var preview_window;
     preview_window.PreviewWindow = PreviewWindow;
 })(preview_window || (preview_window = {})); // module preview_window
 /// <reference path='./requires.ts' />
+/// <reference path="./ipc_messages.ts"/>
 /// <reference path='./base_browser_window.ts' />
 /// <reference path='./base_application.ts' />
 /// <reference path='./inspector_window.ts' />
@@ -184,6 +194,7 @@ var bWin = base_window;
 var mainWin = inspector_window;
 var previewWin = preview_window;
 var app = electron.app;
+var thisClass;
 var Application = (function (_super) {
     __extends(Application, _super);
     function Application(app, appName) {
@@ -195,13 +206,15 @@ var Application = (function (_super) {
         this.previewWindow = undefined;
         this.previewWindowOptions = {};
         this.previewWindowUrl = "file://" + __dirname + "/web/preview.html";
+        this.ipc = electron.ipcMain;
+        thisClass = this;
     }
     Application.prototype.onReady = function () {
         _super.prototype.onReady.call(this);
         // Init browser windows - main
         this.inspectorWindowOptions = {
             width: 500, height: 800, x: 0, y: 0, transparent: false,
-            webPreferences: { nodeIntegration: false }
+            webPreferences: { nodeIntegration: true }
         };
         this.inspectorWindow =
             new inspector_window.InspectorWindow(this.inspectorWindowOptions, this.inspectorWindowUrl);
@@ -212,8 +225,75 @@ var Application = (function (_super) {
         };
         this.previewWindow =
             new previewWin.PreviewWindow(this.previewWindowOptions, this.previewWindowUrl);
+        // IPC message
+        this.setAcceptedAsyncMessageReaction();
+        this.setAcceptedSyncMessageReaction();
     };
-    Application.prototype.loadHTML = function () {
+    Application.prototype.setAcceptedAsyncMessageReaction = function () {
+        this.ipc.on(InspectorToMainAsyncRequestToSendHTMLNameToPreview, this.acceptAsyncRequestToSendHTMLNameToPreview);
+        this.ipc.on(PreviewToMainAsyncReplyForLoadingHTML, this.acceptAsyncReplyForLoadingHTML);
+        this.ipc.on(InspectorToMainAsyncRequestToLoadURL, this.acceptAsyncRequestToLoadURL);
+        this.ipc.on(InspectorToMainAsyncRequestToAnalysePreview, this.acceptAsyncRequestToAnalysePreview);
+        this.ipc.on(InspectorToMainAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
+    };
+    Application.prototype.setAcceptedSyncMessageReaction = function () {
+    };
+    Application.prototype.acceptAsyncRequestToLoadURL = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        if (args[0].indexOf('http://') == 0 || args[0].indexOf('https://') == 0 ||
+            args[0].indexOf('file://') == 0) {
+            thisClass.previewWindowUrl = args[0];
+            console.log('Valid input');
+        }
+        else if (args[0].indexOf('http://') != 0 || args[0].indexOf('https://') != 0) {
+            thisClass.previewWindowUrl = "http://" + args[0];
+            console.log('Added "http://"');
+        }
+        else {
+            console.log('Illegal input');
+            return;
+        }
+        thisClass.previewWindow.loadURL(thisClass.previewWindowUrl);
+        console.log("accept loading url message - " + args[0]);
+    };
+    Application.prototype.acceptAsyncRequestToSendHTMLNameToPreview = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToLoadHTML, args[0]);
+        event.sender.send(MainToInspectorAsyncReplyForSendingHTMLNameToPreview, 'Sent a request to load html to the preview page');
+        console.log('Accepted request from Inspector');
+    };
+    Application.prototype.acceptAsyncReplyForLoadingHTML = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        if (args[0] == 'succeeded') {
+            console.log('Succeeded loading a html on the preview page');
+        }
+        else if (args[0] == 'error') {
+            console.log('Error loading a html on the preview page');
+        }
+    };
+    Application.prototype.acceptAsyncRequestToAnalysePreview = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        console.log('Start to analyse');
+    };
+    Application.prototype.acceptAsyncRequestToExportModifiedHTML = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        console.log('Export modified HTML');
+        console.log(thisClass.previewWindow.window.webContents);
     };
     return Application;
 }(bApp.BaseApplication));

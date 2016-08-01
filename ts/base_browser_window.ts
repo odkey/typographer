@@ -42,6 +42,7 @@ export class BaseBrowserWindow {
     // OS X only
     this.window.on('moved', () => { this.onMoved(); });
   }
+  loadURL(url: string) { this.window.loadURL(url); }
   onClosed() { this.window = undefined; }
   onClose(event: Event) {}
   onPageTitleUpdated(event: Event) {}

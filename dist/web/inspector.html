@@ -3,18 +3,35 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/index.css">
-    <title>Demo Application</title>
-    <script>
+    <title>YourTypes - inspector</title>
+
+    <script type="text/javascript">
+    // window.nodeRequire = require;
+    // delete window.require;
+    // delete window.export;
+    // delete window.module;
+    window.jQuery = window.$ = require('./lib/jquery.3.1.0.min.js');
     </script>
+    <!-- <script type="text/javascript" src="lib/jquery.3.1.0.min.js"></scripts> -->
+
   </head>
   <body>
     <div class="title">
       Electron&nbsp;with&nbsp;TypeScript
     </div>
-    <div class="load-html">
-      <input type="file" name="html-file" id="html-file" value="Choose HTML">
+    <div class="update-preview">
+      <input type="text" id="url-input" name="url-input" value="" />
+      <input type="button" id="send-url" class="button" value="Send URL" />
     </div>
-    <script type="text/javascript" src="lib/jquery.3.1.0.min.js"></script>
+    <div class="control">
+      <div class="analyse-preview">
+        <input type="button" id="analyse" name="analyse" value="Analyse Preview">
+      </div>
+      <div class="export-html">
+        <input type="button" id="export" name="export" value="Export HTML">
+      </div>
+
+    </div>
     <script type="text/javascript" src="js/inspector.js"></script>
   </body>
 </html>

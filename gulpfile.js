@@ -59,13 +59,13 @@ gulp.task('ts:electron', shell.task(
   'tsc -out dist/all.js ts/main.ts;'
 ));;
 
-gulp.task('ts:web', ['ts:web:preview', 'ts:web:main']);
+gulp.task('ts:web', ['ts:web:preview', 'ts:web:inspector']);
 
 gulp.task('ts:web:preview', shell.task(
   'tsc -out dist/web/js/preview.js ts/web/preview.ts'
 ));
 
-gulp.task('ts:web:main', shell.task(
+gulp.task('ts:web:inspector', shell.task(
   'tsc -out dist/web/js/inspector.js ts/web/inspector.ts'
 ));
 

@@ -6,7 +6,8 @@
     "removeComments": false,
     "preserveConstEnums": true,
     "outDir": "../dist",
-    "sourceMap": false
+    "sourceMap": false,
+    "target": "es6"
   },
   "exclude": [
   ],
@@ -17,6 +18,7 @@
     "base_browser_window.ts",
     "inspector_window.ts",
     "preview_window.ts",
+    "ipc_messages.ts",
     "web/requires.ts",
     "web/inspector.ts",
     "web/preview.ts"
