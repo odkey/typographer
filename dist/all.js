@@ -18,6 +18,8 @@ var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequ
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncRequest.ReturningWebviewHTML';
+var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
 /// <reference path="./requires.ts"/>
@@ -227,7 +229,7 @@ var Application = (function (_super) {
         // Init browser windows - preview
         this.previewWindowOptions = {
             width: 1200, height: 1200, x: 500, y: 0, transparent: false,
-            webPreferences: { nodeIntegration: true }
+            webPreferences: { nodeIntegration: true, plugins: true, allowRunningInsecureContent: true }
         };
         this.previewWindow =
             new previewWin.PreviewWindow(this.previewWindowOptions, this.previewWindowUrl);
@@ -242,6 +244,8 @@ var Application = (function (_super) {
         this.ipc.on(InspectorToMainAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
         this.ipc.on(InspectorToMainAsyncRequestToShowPreviewDevTool, this.acceptAsyncRequestToShowPreviewDevTool);
         this.ipc.on(InspectToMainAsyncRequestToReturnWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
+        this.ipc.on(PreviewToMainAsyncReplyForReturningWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
+        this.ipc.on(WebviewToMainAsyncReplyForReturningWebviewHTML, this.acceptAsyncReplyForReturningWebviewHTML);
     };
     Application.prototype.setAcceptedSyncMessageReaction = function () {
         // Use no synchronous communication event
@@ -303,6 +307,14 @@ var Application = (function (_super) {
         }
         thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToReturnWebviewHTML, '');
         console.log('Send a request webview to return the HTML source');
+    };
+    Application.prototype.acceptAsyncReplyForReturningWebviewHTML = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        console.log('Accept reply: returning webview src -', args);
+        thisClass.inspectorWindow.window.webContents.send(MainToInspectorAsyncReplyForReturningWebviewHTML, args);
     };
     Application.prototype.acceptAsyncRequestToExportModifiedHTML = function (event) {
         var args = [];

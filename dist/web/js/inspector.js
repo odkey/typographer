@@ -18,6 +18,8 @@ var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequ
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncRequest.ReturningWebviewHTML';
+var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
 /// <reference path='../requires.ts' />
@@ -25,14 +27,18 @@ var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncRep
 /// <reference path='../ipc_messages.ts' />
 // ts/web/inspector.ts
 // Coded by Yota Odaka
+var thisInspector;
 var Inspector = (function () {
     function Inspector() {
         this.ipc = electron.ipcRenderer;
+        this.webviewHTML = undefined;
+        thisInspector = this;
         this.addURLSendEvent();
         this.addShowDevToolRequestEvent();
         this.addSelectDestinationEvent();
         this.addExportHTMLRequestEvent();
         this.addWebviewHTMLRequestEvent();
+        this.setAcceptedAsyncMessageReaction();
     }
     Inspector.prototype.addURLSendEvent = function () {
         var _this = this;
@@ -91,23 +97,24 @@ var Inspector = (function () {
             console.log('Export modified HTML request to main process');
         });
     };
-    Inspector.prototype.acceptSyncMessage = function (event) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
+    Inspector.prototype.setAcceptedSyncMessageReaction = function () {
         console.log('Accepted synchronous message');
-        console.log("event: " + event);
-        console.log("args: " + args);
     };
-    Inspector.prototype.acceptAsyncMessage = function (event) {
+    Inspector.prototype.setAcceptedAsyncMessageReaction = function () {
+        this.ipc.on(MainToInspectorAsyncReplyForReturningWebviewHTML, this.acceptAsyncReplyForReturningWebviewHTML);
+    };
+    Inspector.prototype.acceptAsyncReplyForReturningWebviewHTML = function (event) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        console.log('Accepted asynchronous message');
-        console.log("evnet:", event);
-        console.log("args: " + args);
+        var parser = new DOMParser();
+        thisInspector.webviewHTML = parser.parseFromString(args[0], "text/html");
+        console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
+        thisInspector.showWebviewHTML();
+    };
+    Inspector.prototype.showWebviewHTML = function () {
+        console.log('Show webview DOM - ', thisInspector.webviewHTML);
     };
     return Inspector;
 }());

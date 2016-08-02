@@ -18,6 +18,8 @@ var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequ
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncRequest.ReturningWebviewHTML';
+var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
 /// <reference path='./requires.ts' />
@@ -61,9 +63,9 @@ var Preview = (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        console.log('html');
         console.log(thisPreview.webview.getWebContents());
-        // event.sender.send(thisPreview.webview.webContents);
+        thisPreview.webview.getWebContents()
+            .send(PreviewToWebviewAsyncRequestToReturnWebviewHTML);
     };
     Preview.prototype.updateSubWebview = function (url) {
         $('#sub-webview').load(url);

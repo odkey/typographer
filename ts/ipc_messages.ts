@@ -22,6 +22,10 @@ const InspectToMainAsyncRequestToReturnWebviewHTML: string =
   'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 const MainToPreviewAsyncRequestToReturnWebviewHTML: string =
   'MainToPreview.AsyncRequest.ReturnWebviewHTML';
+const PreviewToWebviewAsyncRequestToReturnWebviewHTML: string =
+  'PreviewToWebview.AsyncRequest.ReturningWebviewHTML';
+const WebviewToMainAsyncReplyForReturningWebviewHTML: string =
+  'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 const PreviewToMainAsyncReplyForReturningWebviewHTML: string =
   'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 const MainToInspectorAsyncReplyForReturningWebviewHTML: string =

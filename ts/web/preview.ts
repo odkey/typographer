@@ -21,7 +21,7 @@ class Preview {
     this.ipc.on(MainToPreviewAsyncRequestToShowDevTool,
                 this.acceptAsyncRequestToShowDevTool);
     this.ipc.on(MainToPreviewAsyncRequestToReturnWebviewHTML,
-                this.acceptAsyncRequestToReturnWebviewHTML)
+                this.acceptAsyncRequestToReturnWebviewHTML);
   }
   private acceptAsyncRequestToLoadingHTML(
       event: Electron.IpcRendererEvent, ...args: string[]) {
@@ -36,9 +36,9 @@ class Preview {
   }
   private acceptAsyncRequestToReturnWebviewHTML(
       event: Electron.IpcRendererEvent, ...args: string[]) {
-    console.log('html');
     console.log(thisPreview.webview.getWebContents());
-    // event.sender.send(thisPreview.webview.webContents);
+    thisPreview.webview.getWebContents()
+      .send(PreviewToWebviewAsyncRequestToReturnWebviewHTML);
   }
   private updateSubWebview(url: string) {
     $('#sub-webview').load(url);

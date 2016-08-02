@@ -13,6 +13,7 @@
   ],
   "files": [
     "requires.ts",
+    "requires_safe.ts",
     "main.ts",
     "base_application.ts",
     "base_browser_window.ts",
@@ -20,6 +21,7 @@
     "preview_window.ts",
     "ipc_messages.ts",
     "web/requires.ts",
+    "web/requires_safe.ts",
     "web/inspector.ts",
     "web/preview.ts",
     "web/webview.ts"

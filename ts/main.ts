@@ -42,7 +42,7 @@ class Application extends bApp.BaseApplication {
     // Init browser windows - preview
     this.previewWindowOptions = {
       width: 1200, height: 1200, x: 500, y: 0, transparent: false,
-      webPreferences: { nodeIntegration: true }
+      webPreferences: { nodeIntegration: true, plugins: true, allowRunningInsecureContent: true }
     };
     this.previewWindow =
       new previewWin.PreviewWindow(this.previewWindowOptions,
@@ -64,7 +64,11 @@ class Application extends bApp.BaseApplication {
     this.ipc.on(InspectorToMainAsyncRequestToShowPreviewDevTool,
                 this.acceptAsyncRequestToShowPreviewDevTool);
     this.ipc.on(InspectToMainAsyncRequestToReturnWebviewHTML,
-                this.acceptAsyncRequestToReturnWebviewHTML)
+                this.acceptAsyncRequestToReturnWebviewHTML);
+    this.ipc.on(PreviewToMainAsyncReplyForReturningWebviewHTML,
+                this.acceptAsyncRequestToReturnWebviewHTML);
+    this.ipc.on(WebviewToMainAsyncReplyForReturningWebviewHTML,
+                this.acceptAsyncReplyForReturningWebviewHTML);
   }
   private setAcceptedSyncMessageReaction() {
     // Use no synchronous communication event
@@ -116,6 +120,12 @@ class Application extends bApp.BaseApplication {
     thisClass.previewWindow.window.webContents.send(
       MainToPreviewAsyncRequestToReturnWebviewHTML, '');
     console.log('Send a request webview to return the HTML source');
+  }
+  private acceptAsyncReplyForReturningWebviewHTML(
+      event: Electron.IpcMainEvent, ...args: string[]) {
+    console.log('Accept reply: returning webview src -', args);
+    thisClass.inspectorWindow.window.webContents.send(
+      MainToInspectorAsyncReplyForReturningWebviewHTML, args);
   }
   private acceptAsyncRequestToExportModifiedHTML(
       event: Electron.IpcMainEvent, ...args: string[]) {

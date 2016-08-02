@@ -6,6 +6,7 @@
     <script type="text/javascript">
     window.jQuery = window.$ = require('./lib/jquery.3.1.0.min.js');
     </script>
+    <!-- <script type="text/javascript" src="lib/jquery.3.1.0.min.js"></script> -->
   </head>
   <body>
     <div class="control-menu">
@@ -17,7 +18,19 @@
       </div>
     </div>
 
-    <webview id="webview" src="https://google.com/" preload="./js/webview.js" style="width: 100%;height: 1100px;"></webview>
+    <webview id="webview"
+      src="http://keita-lab.jp/"
+      preload="./js/webview.js"
+      plugins></webview>
+    <style>
+    webview {
+      width: 100%;height: 1100px;
+    }
+    </style>
+    <script type="text/javascript">
+    window.jQuery = window.$ = require('./lib/jquery.3.1.0.min.js');
+    </script>
+
     <script type="text/javascript" src="js/preview.js"></script>
   </body>
 </html>

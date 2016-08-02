@@ -5,14 +5,19 @@
 // ts/web/inspector.ts
 // Coded by Yota Odaka
 
+var thisInspector: Inspector;
 class Inspector {
   ipc: Electron.IpcRenderer = electron.ipcRenderer;
+  webviewHTML: HTMLDocument = undefined;
   constructor() {
+    thisInspector = this;
     this.addURLSendEvent();
     this.addShowDevToolRequestEvent();
     this.addSelectDestinationEvent();
     this.addExportHTMLRequestEvent();
     this.addWebviewHTMLRequestEvent();
+
+    this.setAcceptedAsyncMessageReaction();
   }
   private addURLSendEvent() {
     let $button: JQuery = $('input#send-url');
@@ -69,15 +74,22 @@ class Inspector {
       console.log('Export modified HTML request to main process');
     });
   }
-  private acceptSyncMessage(event: Electron.IpcRendererEvent, ...args: string[]) {
+  private setAcceptedSyncMessageReaction() {
     console.log('Accepted synchronous message');
-    console.log(`event: ${ event }`);
-    console.log(`args: ${ args }`);
   }
-  private acceptAsyncMessage(event: Electron.IpcRendererEvent, ...args: string[]) {
-    console.log('Accepted asynchronous message');
-    console.log(`evnet:`, event);
-    console.log(`args: ${ args }`);
+  private setAcceptedAsyncMessageReaction() {
+    this.ipc.on(MainToInspectorAsyncReplyForReturningWebviewHTML,
+                this.acceptAsyncReplyForReturningWebviewHTML);
+  }
+  private acceptAsyncReplyForReturningWebviewHTML(
+      event: Electron.IpcRendererEvent, ...args: string[]) {
+    let parser: DOMParser = new DOMParser()
+    thisInspector.webviewHTML = parser.parseFromString(args[0], "text/html");
+    console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
+    thisInspector.showWebviewHTML();
+  }
+  private showWebviewHTML() {
+    console.log('Show webview DOM - ', thisInspector.webviewHTML);
   }
 }
 
