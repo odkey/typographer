@@ -79,9 +79,9 @@ var Preview = (function () {
     };
     Preview.prototype.addVisitPageEvent = function () {
         var _this = this;
-        var $button = $('.control-menu>input.visit-url');
+        var $button = $('.control-menu>.url>input.visit-url');
         $button.click(function (event) {
-            var $url = $('.control-menu>input.url-field');
+            var $url = $('.control-menu>.url>input.url-field');
             if ($url.val().indexOf('http://') != 0 &&
                 $url.val().indexOf('https://') != 0 &&
                 $url.val().indexOf('file://') != 0) {
@@ -96,7 +96,7 @@ var Preview = (function () {
     Preview.prototype.modifyURL = function () {
         var url = thisPreview.webview.getURL();
         console.log("Visit - " + url);
-        $('.control-menu>input.url-field').val(url);
+        $('.control-menu>.url>input.url-field').val(url);
     };
     Preview.prototype.addWebviewUndoNextButtonEvent = function () {
         var $undo = $('.control-menu>.undo-next>.undo-button');

@@ -1,32 +1,107 @@
+div.drop-shadow {
+  box-shadow: 2px 3px 10px 2px rgba(0, 0, 0, 0.2); }
+
 body {
   background-color: #E0E0E0; }
 
-div.dom-tree-view div.node-depth-1 {
-  margin-left: 15px; }
-
-div.dom-tree-view div.node-depth-2 {
-  margin-left: 30px; }
-
-div.dom-tree-view div.node-depth-3 {
-  margin-left: 45px; }
-
-div.dom-tree-view div.node-depth-4 {
-  margin-left: 60px; }
-
-div.dom-tree-view div.node-depth-5 {
-  margin-left: 75px; }
-
-div.dom-tree-view div.node-depth-6 {
-  margin-left: 90px; }
-
-div.dom-tree-view div.node-depth-7 {
-  margin-left: 105px; }
-
-div.dom-tree-view div.node-depth-8 {
-  margin-left: 120px; }
-
-div.dom-tree-view div.node-depth-9 {
-  margin-left: 135px; }
-
-div.dom-tree-view div.node-depth-10 {
-  margin-left: 150px; }
+div {
+  background-color: #1976D2; }
+  div.title {
+    width: 100%;
+    height: 1em;
+    font-size: 24px;
+    margin-bottom: 8px;
+    text-align: center;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    color: #F0F0F0; }
+  div.control {
+    text-align: center; }
+    div.control div {
+      display: inline-block;
+      background-color: #00BCD4;
+      width: 96%;
+      margin-bottom: 8px; }
+      div.control div.update-preview {
+        display: none; }
+      div.control div.export-html {
+        margin-top: 8px;
+        text-align: left; }
+        div.control div.export-html input {
+          margin-bottom: 0.5em;
+          font-size: 24px; }
+          div.control div.export-html input.export-name {
+            width: 95%;
+            margin-left: 8px;
+            margin-right: 8px;
+            margin-top: 16px; }
+          div.control div.export-html input.destination-select {
+            border-style: none;
+            color: #F0F0F0;
+            background-color: #1976D2;
+            margin-left: 8px;
+            text-align: left;
+            margin-bottom: 16px; }
+            div.control div.export-html input.destination-select:hover {
+              background-color: #2196F3;
+              cursor: pointer; }
+          div.control div.export-html input.export-trigger {
+            border-style: none;
+            color: #F0F0F0;
+            background-color: #1976D2;
+            margin-bottom: 16px;
+            margin-left: 8px; }
+            div.control div.export-html input.export-trigger:hover {
+              background-color: #2196F3;
+              cursor: pointer; }
+      div.control div.analyse-preview {
+        text-align: left; }
+        div.control div.analyse-preview input {
+          margin-top: 16px;
+          margin-bottom: 16px;
+          font-size: 24px;
+          border-style: none;
+          color: #F0F0F0;
+          background-color: #1976D2; }
+          div.control div.analyse-preview input:hover {
+            background-color: #2196F3;
+            cursor: pointer; }
+          div.control div.analyse-preview input.inspect {
+            margin: 8px; }
+  div.dom-tree-view {
+    min-height: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-top: 8px; }
+    div.dom-tree-view div.element-node {
+      background-color: #00BCD4;
+      margin-bottom: 8px;
+      margin-right: 8px;
+      padding-left: 8px;
+      color: #E0E0E0; }
+    div.dom-tree-view div.text-node {
+      background-color: #B2EBF2;
+      margin-bottom: 8px;
+      margin-right: 8px;
+      padding-left: 8px;
+      color: #222222; }
+    div.dom-tree-view div.node-depth-1 {
+      margin-left: 15px; }
+    div.dom-tree-view div.node-depth-2 {
+      margin-left: 30px; }
+    div.dom-tree-view div.node-depth-3 {
+      margin-left: 45px; }
+    div.dom-tree-view div.node-depth-4 {
+      margin-left: 60px; }
+    div.dom-tree-view div.node-depth-5 {
+      margin-left: 75px; }
+    div.dom-tree-view div.node-depth-6 {
+      margin-left: 90px; }
+    div.dom-tree-view div.node-depth-7 {
+      margin-left: 105px; }
+    div.dom-tree-view div.node-depth-8 {
+      margin-left: 120px; }
+    div.dom-tree-view div.node-depth-9 {
+      margin-left: 135px; }
+    div.dom-tree-view div.node-depth-10 {
+      margin-left: 150px; }

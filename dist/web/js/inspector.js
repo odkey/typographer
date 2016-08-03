@@ -124,17 +124,19 @@ var Inspector = (function () {
     Inspector.prototype.appendItemToDOMTreeView = function (node, depth) {
         if (node.nodeType == Node.ELEMENT_NODE) {
             // Create the item
-            var element = "<div class=\"text-node node-depth-" + depth + "\">";
-            element += depth + "&nbsp;" + node.nodeName + "&nbsp;" + node;
+            var element = "<div class=\"element-node node-depth-" + depth + " drop-shadow\">";
+            element += "" + node.nodeName;
             element += "</div>";
             $('div.dom-tree-view').append(element);
         }
-        else if (node.nodeType == Node.TEXT_NODE) {
+        else if (node.nodeType === Node.TEXT_NODE) {
             console.log(node.textContent);
-            if (node.textContent) {
-                console.log(node.textContent);
-                $('div.dom-tree-view')
-                    .append("<div style=\"margin-left:" + depth * 15 + "px;\">" + node.textContent + "</div>");
+            if (node.textContent != false) {
+                // console.log(node.textContent);
+                var element = "<div class=\"text-node node-depth-" + depth + " drop-shadow\">";
+                element += "" + node.textContent;
+                element += "</div>";
+                $('div.dom-tree-view').append(element);
             }
         }
         if (node.hasChildNodes()) {

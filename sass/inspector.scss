@@ -1,15 +1,32 @@
 @import '_variables';
+@import '_common';
 
 body {
   background-color: $TYPG-dwhite;
 }
 div {
+  background-color: $TYPG-dblue;
   &.title {
-
+    width: 100%;
+    height: 1em;
+    font-size: $TYPG-large;
+    margin-bottom: $TYPG-margin-regular;
+    text-align: center;
+    padding-top: $TYPG-large;
+    padding-bottom: $TYPG-large;
+    color: $TYPG-white;
   }
   &.control {
+    text-align: center;
     div {
+      display: inline-block;
+      background-color: $TYPG-cyan;
+      width: 96%;
+      margin-bottom: $TYPG-margin-regular;
+      // margin-left: $TYPG-margin-regular;
+      // margin-right: $TYPG-margin-regular;
       &.update-preview {
+        display: none;
         input {
           &.url-input {
 
@@ -20,22 +37,60 @@ div {
         }
       }
       &.export-html {
+        margin-top: $TYPG-margin-regular;
+        text-align: left;
         input {
+          margin-bottom: 0.5em;
+          font-size: $TYPG-large;
           &.export-name {
 
+            width: 95%;
+            margin-left: $TYPG-margin-regular;
+            margin-right: $TYPG-margin-regular;
+            margin-top: $TYPG-margin-large;
+            // margin-top: $TYPG-margin-regular;
+            // margin-bottom: $TYPG-margin-regular;
           }
           &.destination-select {
-
+            border-style: none;
+            color: $TYPG-white;
+            background-color: $TYPG-dblue;
+            margin-left: $TYPG-margin-regular;
+            text-align: left;
+            margin-bottom: $TYPG-margin-large;
+            &:hover {
+              background-color: $TYPG-blue;
+              cursor: pointer;
+            }
           }
           &.export-trigger {
-
+            border-style: none;
+            color: $TYPG-white;
+            background-color: $TYPG-dblue;
+            margin-bottom: $TYPG-margin-large;
+            margin-left: $TYPG-margin-regular;
+            &:hover {
+              background-color: $TYPG-blue;
+              cursor: pointer;
+            }
           }
         }
       }
       &.analyse-preview {
+        text-align: left;
         input {
+          margin-top: $TYPG-margin-large;
+          margin-bottom: $TYPG-margin-large;
+          font-size: $TYPG-large;
+          border-style: none;
+          color: $TYPG-white;
+          background-color: $TYPG-dblue;
+          &:hover {
+            background-color: $TYPG-blue;
+            cursor: pointer;
+          }
           &.inspect {
-
+            margin: $TYPG-margin-regular;
           }
           &.analyse {
 
@@ -45,9 +100,24 @@ div {
     }
   }
   &.dom-tree-view {
+    min-height: 5px;
+    margin-top: $TYPG-margin-large;
+    margin-bottom: $TYPG-margin-large;
+    padding-top: $TYPG-margin-regular;
     div {
+      &.element-node {
+        background-color: $TYPG-cyan;
+        margin-bottom: $TYPG-margin-regular;
+        margin-right: $TYPG-margin-regular;
+        padding-left: $TYPG-margin-regular;
+        color: $TYPG-dwhite;
+      }
       &.text-node {
-
+        background-color: $TYPG-lcyan;
+        margin-bottom: $TYPG-margin-regular;
+        margin-right: $TYPG-margin-regular;
+        padding-left: $TYPG-margin-regular;
+        color: $TYPG-black;
       }
       @for $i from 1 through 10 {
       &.node-depth-#{ $i } {

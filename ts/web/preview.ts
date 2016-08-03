@@ -50,9 +50,9 @@ class Preview {
     });
   }
   private addVisitPageEvent() {
-    let $button: JQuery = $('.control-menu>input.visit-url');
+    let $button: JQuery = $('.control-menu>.url>input.visit-url');
     $button.click((event) => {
-      let $url: JQuery = $('.control-menu>input.url-field');
+      let $url: JQuery = $('.control-menu>.url>input.url-field');
       if ($url.val().indexOf('http://') != 0 &&
           $url.val().indexOf('https://') != 0 &&
           $url.val().indexOf('file://') != 0) {
@@ -67,7 +67,7 @@ class Preview {
   private modifyURL() {
     let url: string = thisPreview.webview.getURL();
     console.log(`Visit - ${ url }`);
-    $('.control-menu>input.url-field').val(url);
+    $('.control-menu>.url>input.url-field').val(url);
   }
   private addWebviewUndoNextButtonEvent() {
     let $undo: JQuery = $('.control-menu>.undo-next>.undo-button');
