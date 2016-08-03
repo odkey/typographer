@@ -1,0 +1,59 @@
+@import '_variables';
+
+body {
+  background-color: $TYPG-dwhite;
+}
+div {
+  &.title {
+
+  }
+  &.control {
+    div {
+      &.update-preview {
+        input {
+          &.url-input {
+
+          }
+          &.send-url {
+
+          }
+        }
+      }
+      &.export-html {
+        input {
+          &.export-name {
+
+          }
+          &.destination-select {
+
+          }
+          &.export-trigger {
+
+          }
+        }
+      }
+      &.analyse-preview {
+        input {
+          &.inspect {
+
+          }
+          &.analyse {
+
+          }
+        }
+      }
+    }
+  }
+  &.dom-tree-view {
+    div {
+      &.text-node {
+
+      }
+      @for $i from 1 through 10 {
+      &.node-depth-#{ $i } {
+        margin-left: 15px * $i;
+      }
+      } // end for
+    }
+  }
+}

@@ -109,12 +109,39 @@ var Inspector = (function () {
             args[_i - 1] = arguments[_i];
         }
         var parser = new DOMParser();
-        thisInspector.webviewHTML = parser.parseFromString(args[0], "text/html");
+        thisInspector.webviewHTML =
+            parser.parseFromString(args[0].toString(), "text/html");
         console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
         thisInspector.showWebviewHTML();
     };
     Inspector.prototype.showWebviewHTML = function () {
         console.log('Show webview DOM - ', thisInspector.webviewHTML);
+        var $domTreeField = $('div.dom-tree-view');
+        var domTree = undefined;
+        var firstNodes = thisInspector.webviewHTML.childNodes;
+        thisInspector.appendItemToDOMTreeView(thisInspector.webviewHTML, 0);
+    };
+    Inspector.prototype.appendItemToDOMTreeView = function (node, depth) {
+        if (node.nodeType == Node.ELEMENT_NODE) {
+            // Create the item
+            var element = "<div class=\"text-node node-depth-" + depth + "\">";
+            element += depth + "&nbsp;" + node.nodeName + "&nbsp;" + node;
+            element += "</div>";
+            $('div.dom-tree-view').append(element);
+        }
+        else if (node.nodeType == Node.TEXT_NODE) {
+            console.log(node.textContent);
+            if (node.textContent) {
+                console.log(node.textContent);
+                $('div.dom-tree-view')
+                    .append("<div style=\"margin-left:" + depth * 15 + "px;\">" + node.textContent + "</div>");
+            }
+        }
+        if (node.hasChildNodes()) {
+            for (var i = 0; i < node.childNodes.length; i++) {
+                thisInspector.appendItemToDOMTreeView(node.childNodes[i], depth + 1);
+            }
+        }
     };
     return Inspector;
 }());

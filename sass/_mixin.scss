@@ -1,0 +1,11 @@
+@import '_variables';
+
+@mixin preview-input-button {
+  border-style: none;
+  background-color: $TYPG-green;
+  color: $TYPG-white;
+  &:hover {
+    background-color: $TYPG-dgreen;
+    cursor: pointer;
+  }
+}

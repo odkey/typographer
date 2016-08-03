@@ -83,13 +83,40 @@ class Inspector {
   }
   private acceptAsyncReplyForReturningWebviewHTML(
       event: Electron.IpcRendererEvent, ...args: string[]) {
-    let parser: DOMParser = new DOMParser()
-    thisInspector.webviewHTML = parser.parseFromString(args[0], "text/html");
+    let parser: DOMParser = new DOMParser();
+    thisInspector.webviewHTML =
+      parser.parseFromString(args[0].toString(), "text/html");
     console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
     thisInspector.showWebviewHTML();
   }
   private showWebviewHTML() {
     console.log('Show webview DOM - ', thisInspector.webviewHTML);
+    let $domTreeField: JQuery = $('div.dom-tree-view');
+    let domTree: string = undefined;
+    let firstNodes: NodeList = thisInspector.webviewHTML.childNodes;
+    thisInspector.appendItemToDOMTreeView(thisInspector.webviewHTML, 0);
+  }
+  private appendItemToDOMTreeView(node: Node, depth: number) {
+    if (node.nodeType == Node.ELEMENT_NODE) {
+      // Create the item
+      let element: string = `<div class="text-node node-depth-${ depth }">`;
+      element += `${ depth }&nbsp;${ node.nodeName }&nbsp;${ node }`;
+      element += `</div>`;
+      $('div.dom-tree-view').append(element);
+    }
+    else if (node.nodeType == Node.TEXT_NODE) {
+      console.log(node.textContent);
+      if (node.textContent  ) {
+        console.log(node.textContent);
+      $('div.dom-tree-view')
+        .append(`<div style="margin-left:${ depth*15 }px;">${ node.textContent }</div>`);
+      }
+    }
+    if (node.hasChildNodes()) {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        thisInspector.appendItemToDOMTreeView(node.childNodes[i], depth+1);
+      }
+    }
   }
 }
 

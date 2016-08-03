@@ -18,7 +18,7 @@ var exceptDist = '!./dist';
 gulp.task('clean:css', () => {
   console.log('Delete CSS files located under /dist/web/css');
   del.sync([
-    dist + '/web/css/**/*.css'
+    dist + '/**/*.css'
   ]);
 });
 gulp.task('clean:js', () => {
@@ -34,10 +34,10 @@ gulp.task('sass', ['clean:css', 'sass:impl']);
 
 gulp.task('sass:impl', () => {
   console.log('Compile SCSS files as CSS');
-  gulp.src('./sass/**/*.scss')
+  gulp.src('sass/**/*.scss')
     .pipe(plumber())
-    .pipe(autoprefier())
     .pipe(sass())
+    .pipe(autoprefier())
     .pipe(gulp.dest(dist + '/web/css'));
 });
 
@@ -75,7 +75,7 @@ gulp.task('ts:web:webview', shell.task(
 
 
 gulp.task('sass:watch', () => {
-  gulp.watch('./sass/**/*.scss', ['sass']);
+  gulp.watch(['./sass/**/*.scss', './sass/**/_*.scss'], ['sass']);
 });
 
 gulp.task('ts:watch', () => {
