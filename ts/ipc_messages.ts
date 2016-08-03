@@ -16,6 +16,8 @@ const InspectorToMainAsyncRequestToShowPreviewDevTool: string =
   'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 const InspectorToMainAsyncRequestToExportModifiedHTML: string =
   'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+const MainToPreviewAsyncRequestToExportModifiedHTML: string =
+  'MainToInspector.AsyncRequest.ExportingModifiedHTML';
 const MainToPreviewAsyncRequestToShowDevTool: string =
   'MainToPreview.AsyncRequest.ShowingDevTool';
 const InspectToMainAsyncRequestToReturnWebviewHTML: string =

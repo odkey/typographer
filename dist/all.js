@@ -15,6 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -321,15 +322,15 @@ var Application = (function (_super) {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        console.log('Export modified HTML');
-        thisClass.previewWindow.window.webContents.savePage(args[0], 'HTMLComplete', function (error) {
-            if (!error) {
-                console.log("Saved successfully - " + args[0]);
-            }
-            else {
-                console.log("error - " + error);
-            }
-        });
+        console.log('Send request to preview process to export modified HTML');
+        thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToExportModifiedHTML, args[0]);
+        // thisClass.previewWindow.window.webContents.savePage(
+        //   args[0], 'HTMLComplete', (error) => {
+        //     if (!error) {
+        //       console.log(`Saved successfully - ${ args[0] }`);
+        //     }
+        //     else { console.log(`error - ${ error }`); }
+        //   });
     };
     return Application;
 }(bApp.BaseApplication));

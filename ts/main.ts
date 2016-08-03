@@ -129,14 +129,16 @@ class Application extends bApp.BaseApplication {
   }
   private acceptAsyncRequestToExportModifiedHTML(
       event: Electron.IpcMainEvent, ...args: string[]) {
-    console.log('Export modified HTML');
-    thisClass.previewWindow.window.webContents.savePage(
-      args[0], 'HTMLComplete', (error) => {
-        if (!error) {
-          console.log(`Saved successfully - ${ args[0] }`);
-        }
-        else { console.log(`error - ${ error }`); }
-      });
+    console.log('Send request to preview process to export modified HTML');
+    thisClass.previewWindow.window.webContents.send(
+      MainToPreviewAsyncRequestToExportModifiedHTML, args[0]);
+    // thisClass.previewWindow.window.webContents.savePage(
+    //   args[0], 'HTMLComplete', (error) => {
+    //     if (!error) {
+    //       console.log(`Saved successfully - ${ args[0] }`);
+    //     }
+    //     else { console.log(`error - ${ error }`); }
+    //   });
   }
 }
 

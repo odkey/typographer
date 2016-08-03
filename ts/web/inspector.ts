@@ -65,7 +65,11 @@ class Inspector {
     let $button: JQuery = $('.export-html>input.export-trigger');
     $button.click((event) => {
       let $filepath: JQuery = $('.export-html>input.export-name');
-      if ($filepath.val().indexOf('.html') != $filepath.val().length -5) {
+      if ($filepath.val().length == 0) {
+        dialog.showErrorBox('Illegal save name', 'Illegal file name was inputted.');
+        return;
+      }
+      else if ($filepath.val().indexOf('.html') != $filepath.val().length -5) {
         $filepath.val(`${ $filepath.val() }.html`);
         console.log('Added extension - .html');
       }
@@ -105,9 +109,7 @@ class Inspector {
       $('div.dom-tree-view').append(element);
     }
     else if (node.nodeType === Node.TEXT_NODE) {
-      console.log(node.textContent);
-      if (node.textContent != false) {
-        // console.log(node.textContent);
+      if (node.textContent) {
         let element: string = `<div class="text-node node-depth-${ depth } drop-shadow">`;
         element += `${ node.textContent }`;
         element += `</div>`;

@@ -15,6 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -89,7 +90,11 @@ var Inspector = (function () {
         var $button = $('.export-html>input.export-trigger');
         $button.click(function (event) {
             var $filepath = $('.export-html>input.export-name');
-            if ($filepath.val().indexOf('.html') != $filepath.val().length - 5) {
+            if ($filepath.val().length == 0) {
+                dialog.showErrorBox('Illegal save name', 'Illegal file name was inputted.');
+                return;
+            }
+            else if ($filepath.val().indexOf('.html') != $filepath.val().length - 5) {
                 $filepath.val($filepath.val() + ".html");
                 console.log('Added extension - .html');
             }
@@ -130,9 +135,7 @@ var Inspector = (function () {
             $('div.dom-tree-view').append(element);
         }
         else if (node.nodeType === Node.TEXT_NODE) {
-            console.log(node.textContent);
-            if (node.textContent != false) {
-                // console.log(node.textContent);
+            if (node.textContent) {
                 var element = "<div class=\"text-node node-depth-" + depth + " drop-shadow\">";
                 element += "" + node.textContent;
                 element += "</div>";

@@ -22,11 +22,23 @@ class Preview {
                 this.acceptAsyncRequestToShowDevTool);
     this.ipc.on(MainToPreviewAsyncRequestToReturnWebviewHTML,
                 this.acceptAsyncRequestToReturnWebviewHTML);
+    this.ipc.on(MainToPreviewAsyncRequestToExportModifiedHTML,
+                this.acceptAsyncRequestToExportModifiedHTML);
   }
   private acceptAsyncRequestToLoadingHTML(
       event: Electron.IpcRendererEvent, ...args: string[]) {
     // thisPreview.updateSubWebview(args[0]);
     // $('#sub-webview').attr('src', args[0]);
+  }
+  private acceptAsyncRequestToExportModifiedHTML(
+      event: Electron.IpcRendererEvent, ...args: string[]) {
+    thisPreview.webview.getWebContents().savePage(
+      args[0], 'HTMLComplete', (error: any) => {
+        if (!error) {
+          dialog.showErrorBox('Succeeded',`Saved successfully - ${ args[0] }`);
+        }
+        else { console.log(`error - ${ error }`); }
+      });
   }
   private acceptAsyncRequestToShowDevTool(
       event: Electron.IpcRendererEvent, ...args: string[]) {

@@ -15,6 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -40,6 +41,7 @@ var Preview = (function () {
         this.ipc.on(MainToPreviewAsyncRequestToLoadHTML, this.acceptAsyncRequestToLoadingHTML);
         this.ipc.on(MainToPreviewAsyncRequestToShowDevTool, this.acceptAsyncRequestToShowDevTool);
         this.ipc.on(MainToPreviewAsyncRequestToReturnWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
+        this.ipc.on(MainToPreviewAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
     };
     Preview.prototype.acceptAsyncRequestToLoadingHTML = function (event) {
         var args = [];
@@ -48,6 +50,20 @@ var Preview = (function () {
         }
         // thisPreview.updateSubWebview(args[0]);
         // $('#sub-webview').attr('src', args[0]);
+    };
+    Preview.prototype.acceptAsyncRequestToExportModifiedHTML = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        thisPreview.webview.getWebContents().savePage(args[0], 'HTMLComplete', function (error) {
+            if (!error) {
+                dialog.showErrorBox('Succeeded', "Saved successfully - " + args[0]);
+            }
+            else {
+                console.log("error - " + error);
+            }
+        });
     };
     Preview.prototype.acceptAsyncRequestToShowDevTool = function (event) {
         var args = [];
