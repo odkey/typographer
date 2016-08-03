@@ -48,20 +48,36 @@ div.control-menu {
           div.control-menu div.url input.visit-url:hover {
             background-color: #4CAF50;
             cursor: pointer; }
-  div.control-menu div.undo-next {
-    text-align: left;
-    background-color: #8BC34A; }
-    div.control-menu div.undo-next div {
+    div.control-menu div.undo-next {
       display: inline-block;
-      width: 1em;
-      height: 1em;
-      margin-top: 0.2em;
-      margin-bottom: 0.2em;
-      text-align: center;
-      color: #388E3C;
-      font-size: 36px; }
-      div.control-menu div.undo-next div:hover {
-        color: #4CAF50;
-        cursor: pointer; }
-      div.control-menu div.undo-next div.undo-button {
-        margin-left: 0.5em; }
+      text-align: justify;
+      width: 20%;
+      background-color: #8BC34A; }
+      div.control-menu div.undo-next div {
+        display: inline-block;
+        width: 49%;
+        height: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        text-align: center;
+        color: #388E3C;
+        font-size: 36px; }
+        div.control-menu div.undo-next div:hover {
+          color: #4CAF50;
+          cursor: pointer; }
+    div.control-menu div.demo-link {
+      display: inline-block;
+      width: 50%;
+      background-color: #8BC34A; }
+      div.control-menu div.demo-link div {
+        display: inline-block;
+        width: 100%;
+        height: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        text-align: center;
+        color: #388E3C;
+        font-size: 36px; }
+        div.control-menu div.demo-link div:hover {
+          color: #4CAF50;
+          cursor: pointer; }

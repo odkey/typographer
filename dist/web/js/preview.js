@@ -103,6 +103,7 @@ var Preview = (function () {
         thisPreview.webview.addEventListener('dom-ready', function () {
             _this.addVisitPageEvent();
             _this.addWebviewUndoNextButtonEvent();
+            _this.addWebviewDemoLinkButtonEvent();
         });
     };
     Preview.prototype.addVisitPageEvent = function () {
@@ -131,6 +132,12 @@ var Preview = (function () {
         var $next = $('.control-menu>.undo-next>.next-button');
         $undo.click(function () { thisPreview.webview.goBack(); });
         $next.click(function () { thisPreview.webview.goForward(); });
+    };
+    Preview.prototype.addWebviewDemoLinkButtonEvent = function () {
+        var $link = $('.control-menu>.demo-link>.demo-link-button');
+        $link.click(function () {
+            thisPreview.webview.loadURL('file:///Users/YotaOdaka/Documents/003_software_engineering/js/typographer/dist/demo_web/index.html');
+        });
     };
     return Preview;
 }());

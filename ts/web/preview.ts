@@ -66,6 +66,7 @@ class Preview {
     thisPreview.webview.addEventListener('dom-ready', () => {
       this.addVisitPageEvent();
       this.addWebviewUndoNextButtonEvent();
+      this.addWebviewDemoLinkButtonEvent();
     });
   }
   private addVisitPageEvent() {
@@ -93,6 +94,12 @@ class Preview {
     let $next: JQuery = $('.control-menu>.undo-next>.next-button');
     $undo.click(() => { thisPreview.webview.goBack(); });
     $next.click(() => { thisPreview.webview.goForward(); });
+  }
+  private addWebviewDemoLinkButtonEvent() {
+    let $link: JQuery =  $('.control-menu>.demo-link>.demo-link-button');
+    $link.click(() => {
+      thisPreview.webview.loadURL('file:///Users/YotaOdaka/Documents/003_software_engineering/js/typographer/dist/demo_web/index.html');
+    });
   }
 }
 
