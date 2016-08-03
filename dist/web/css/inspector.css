@@ -14,7 +14,8 @@ div {
     text-align: center;
     padding-top: 24px;
     padding-bottom: 24px;
-    color: #F0F0F0; }
+    color: #F0F0F0;
+    background-color: #303F9F; }
   div.control {
     text-align: center; }
     div.control div {

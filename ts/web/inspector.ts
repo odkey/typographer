@@ -113,7 +113,7 @@ class Inspector {
       $('div.dom-tree-view').append(element);
     }
     else if (node.nodeType === Node.TEXT_NODE) {
-      if (node.textContent.indexOf('\n') != 0) {
+      if (node.textContent.indexOf('\n') != 0 || true) {
         // console.log($(node.parentElement));
         // thisInspector.webviewHTML.get
         let element: string = `<div class="text-node node-depth-${ depth } drop-shadow`;
