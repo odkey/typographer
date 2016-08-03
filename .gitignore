@@ -1,2 +1,4 @@
 node_modules/*
 typings/globals/*
+YourTypes-darwin-x64/*
+YourTypes-win32-x64/*
