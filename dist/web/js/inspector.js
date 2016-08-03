@@ -15,7 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
-var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -23,6 +23,9 @@ var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncReq
 var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
+var InspectorToMainAsyncRequestToAddSpanTag = 'InspectorToMain.AsyncRequest.AddingSpanTag';
+var MainToPreviewAsyncRequestToAddSpanTag = 'MainToPreview.AsyncRequest.AddingSpanTag';
+var PreviewToWebviewAsyncRequestToAddSpanTag = 'PreviewToWebview.AsyncRequest.AddingSpanTag';
 /// <reference path='../requires.ts' />
 /// <reference path='./requires.ts' />
 /// <reference path='../ipc_messages.ts' />
@@ -63,6 +66,7 @@ var Inspector = (function () {
         var _this = this;
         var $button = $('input.analyse');
         $button.click(function (event) {
+            $('div.dom-tree-view').empty();
             _this.ipc.send(InspectToMainAsyncRequestToReturnWebviewHTML, '');
             console.log('Send webview html request to main process');
         });
@@ -116,7 +120,8 @@ var Inspector = (function () {
         var parser = new DOMParser();
         thisInspector.webviewHTML =
             parser.parseFromString(args[0].toString(), "text/html");
-        console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
+        // let jd: any =0;
+        // console.log('Accepted Webview HTML src -', thisInspector.webviewHTML);
         thisInspector.showWebviewHTML();
     };
     Inspector.prototype.showWebviewHTML = function () {
@@ -128,6 +133,8 @@ var Inspector = (function () {
     };
     Inspector.prototype.appendItemToDOMTreeView = function (node, depth) {
         if (node.nodeType == Node.ELEMENT_NODE) {
+            var parser = new DOMParser();
+            // console.log(node.getPrototypeOf());
             // Create the item
             var element = "<div class=\"element-node node-depth-" + depth + " drop-shadow\">";
             element += "" + node.nodeName;
@@ -135,11 +142,23 @@ var Inspector = (function () {
             $('div.dom-tree-view').append(element);
         }
         else if (node.nodeType === Node.TEXT_NODE) {
-            if (node.textContent) {
-                var element = "<div class=\"text-node node-depth-" + depth + " drop-shadow\">";
+            if (node.textContent.indexOf('\n') != 0) {
+                // console.log($(node.parentElement));
+                // thisInspector.webviewHTML.get
+                var element = "<div class=\"text-node node-depth-" + depth + " drop-shadow";
+                // element += `onclick=\'console.log(\"clicked\");thisInspector.ipc.send(InspectorToMainAsyncRequestToAddSpanTag, element);\'`;
+                element += "\">";
                 element += "" + node.textContent;
                 element += "</div>";
-                $('div.dom-tree-view').append(element);
+                var $element = $($.parseHTML(element));
+                console.log(node.parentElement);
+                $element.click(function (event) {
+                    console.log('clicked', event);
+                    thisInspector.ipc
+                        .send(InspectorToMainAsyncRequestToAddSpanTag, node.parentElement.outerHTML);
+                });
+                // console.log('e',node.parentElement.outerHTML);
+                $('div.dom-tree-view').append($element);
             }
         }
         if (node.hasChildNodes()) {

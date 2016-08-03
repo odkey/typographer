@@ -24,6 +24,8 @@ class Preview {
                 this.acceptAsyncRequestToReturnWebviewHTML);
     this.ipc.on(MainToPreviewAsyncRequestToExportModifiedHTML,
                 this.acceptAsyncRequestToExportModifiedHTML);
+    this.ipc.on(MainToPreviewAsyncRequestToAddSpanTag,
+                this.acceptAsyncRequestToAddSpanTag);
   }
   private acceptAsyncRequestToLoadingHTML(
       event: Electron.IpcRendererEvent, ...args: string[]) {
@@ -51,6 +53,11 @@ class Preview {
     console.log(thisPreview.webview.getWebContents());
     thisPreview.webview.getWebContents()
       .send(PreviewToWebviewAsyncRequestToReturnWebviewHTML);
+  }
+  private acceptAsyncRequestToAddSpanTag(
+      event: Electron.IpcRendererEvent, ...args: string[]) {
+    thisPreview.webview.getWebContents()
+      .send(PreviewToWebviewAsyncRequestToAddSpanTag, args[0]);
   }
   private updateSubWebview(url: string) {
     $('#sub-webview').load(url);

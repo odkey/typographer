@@ -70,7 +70,10 @@ gulp.task('ts:web:inspector', shell.task(
 ));
 
 gulp.task('ts:web:webview', shell.task(
-  'tsc -out dist/web/js/webview.js ts/web/webview.ts'
+  [
+    'tsc -out dist/web/js/webview_dev.js ts/web/webview.ts',
+    'cat ts/web/webview_include.js dist/web/js/webview_dev.js > dist/web/js/webview.js'
+  ]
 ));
 
 

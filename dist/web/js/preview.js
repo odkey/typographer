@@ -15,7 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
-var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -23,6 +23,9 @@ var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncReq
 var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
+var InspectorToMainAsyncRequestToAddSpanTag = 'InspectorToMain.AsyncRequest.AddingSpanTag';
+var MainToPreviewAsyncRequestToAddSpanTag = 'MainToPreview.AsyncRequest.AddingSpanTag';
+var PreviewToWebviewAsyncRequestToAddSpanTag = 'PreviewToWebview.AsyncRequest.AddingSpanTag';
 /// <reference path='./requires.ts' />
 /// <reference path='../requires.ts' />
 /// <reference path='../ipc_messages.ts' />
@@ -42,6 +45,7 @@ var Preview = (function () {
         this.ipc.on(MainToPreviewAsyncRequestToShowDevTool, this.acceptAsyncRequestToShowDevTool);
         this.ipc.on(MainToPreviewAsyncRequestToReturnWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
         this.ipc.on(MainToPreviewAsyncRequestToExportModifiedHTML, this.acceptAsyncRequestToExportModifiedHTML);
+        this.ipc.on(MainToPreviewAsyncRequestToAddSpanTag, this.acceptAsyncRequestToAddSpanTag);
     };
     Preview.prototype.acceptAsyncRequestToLoadingHTML = function (event) {
         var args = [];
@@ -82,6 +86,14 @@ var Preview = (function () {
         console.log(thisPreview.webview.getWebContents());
         thisPreview.webview.getWebContents()
             .send(PreviewToWebviewAsyncRequestToReturnWebviewHTML);
+    };
+    Preview.prototype.acceptAsyncRequestToAddSpanTag = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        thisPreview.webview.getWebContents()
+            .send(PreviewToWebviewAsyncRequestToAddSpanTag, args[0]);
     };
     Preview.prototype.updateSubWebview = function (url) {
         $('#sub-webview').load(url);

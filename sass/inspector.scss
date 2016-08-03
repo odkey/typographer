@@ -101,7 +101,7 @@ div {
   }
   &.dom-tree-view {
     min-height: 5px;
-    margin-top: $TYPG-margin-large;
+    margin-top: $TYPG-margin-regular;
     margin-bottom: $TYPG-margin-large;
     padding-top: $TYPG-margin-regular;
     div {
@@ -117,9 +117,15 @@ div {
         margin-bottom: $TYPG-margin-regular;
         margin-right: $TYPG-margin-regular;
         padding-left: $TYPG-margin-regular;
+        padding-top: $TYPG-margin-small;
+        padding-bottom: $TYPG-margin-small;
         color: $TYPG-black;
+        &:hover {
+          background-color: $TYPG-blue;
+          cursor: pointer;
+        }
       }
-      @for $i from 1 through 10 {
+      @for $i from 1 through 300 {
       &.node-depth-#{ $i } {
         margin-left: 15px * $i;
       }

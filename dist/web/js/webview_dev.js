@@ -1,7 +1,3 @@
-
-window.addEventListener('load', () => {
-  window.$ = window.jQuery = require('jquery');
-});
 // Message channels
 var InspectorToMainAsyncRequestToSendHTMLNameToPreview = 'InspectorToMain.AyncRequest.SendHTMLNameToPreview';
 var MainToInspectorAsyncReplyForSendingHTMLNameToPreview = 'MainToInspector.AyncReply.SendingHTMLNameToPreview';

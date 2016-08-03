@@ -69,6 +69,8 @@ class Application extends bApp.BaseApplication {
                 this.acceptAsyncRequestToReturnWebviewHTML);
     this.ipc.on(WebviewToMainAsyncReplyForReturningWebviewHTML,
                 this.acceptAsyncReplyForReturningWebviewHTML);
+    this.ipc.on(InspectorToMainAsyncRequestToAddSpanTag,
+                this.acceptAsyncRequestToAddSpanTag);
   }
   private setAcceptedSyncMessageReaction() {
     // Use no synchronous communication event
@@ -123,7 +125,7 @@ class Application extends bApp.BaseApplication {
   }
   private acceptAsyncReplyForReturningWebviewHTML(
       event: Electron.IpcMainEvent, ...args: string[]) {
-    console.log('Accept reply: returning webview src -', args);
+    // console.log('Accept reply: returning webview src -', args);
     thisClass.inspectorWindow.window.webContents.send(
       MainToInspectorAsyncReplyForReturningWebviewHTML, args);
   }
@@ -139,6 +141,12 @@ class Application extends bApp.BaseApplication {
     //     }
     //     else { console.log(`error - ${ error }`); }
     //   });
+  }
+  private acceptAsyncRequestToAddSpanTag(
+      event: Electron.IpcMainEvent, ...args: string[]) {
+    console.log('Accepted \"add span tag\"');
+    thisClass.previewWindow.window.webContents.send(
+      MainToPreviewAsyncRequestToAddSpanTag, args[0]);
   }
 }
 

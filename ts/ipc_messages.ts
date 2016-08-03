@@ -17,7 +17,7 @@ const InspectorToMainAsyncRequestToShowPreviewDevTool: string =
 const InspectorToMainAsyncRequestToExportModifiedHTML: string =
   'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
 const MainToPreviewAsyncRequestToExportModifiedHTML: string =
-  'MainToInspector.AsyncRequest.ExportingModifiedHTML';
+  'MainInspector.AsyncRequest.ExportingModifiedHTML';
 const MainToPreviewAsyncRequestToShowDevTool: string =
   'MainToPreview.AsyncRequest.ShowingDevTool';
 const InspectToMainAsyncRequestToReturnWebviewHTML: string =
@@ -32,3 +32,9 @@ const PreviewToMainAsyncReplyForReturningWebviewHTML: string =
   'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 const MainToInspectorAsyncReplyForReturningWebviewHTML: string =
   'MainToInspector.AsyncReply.ReturningWebviewHTML';
+const InspectorToMainAsyncRequestToAddSpanTag: string =
+  'InspectorToMain.AsyncRequest.AddingSpanTag';
+const MainToPreviewAsyncRequestToAddSpanTag: string =
+'MainToPreview.AsyncRequest.AddingSpanTag';
+const PreviewToWebviewAsyncRequestToAddSpanTag: string =
+'PreviewToWebview.AsyncRequest.AddingSpanTag';

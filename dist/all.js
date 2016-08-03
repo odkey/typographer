@@ -15,7 +15,7 @@ var InspectorToMainAsyncRequestToLoadURL = 'InspectorToMain.AsyncRequest.Loading
 var InspectorToMainAsyncRequestToAnalysePreview = 'InspectorToMain.AsyncRequest.AnalysingPreview';
 var InspectorToMainAsyncRequestToShowPreviewDevTool = 'InspectorToMain.AsyncRequest.ShowingPreviewDevTool';
 var InspectorToMainAsyncRequestToExportModifiedHTML = 'InspectorToMain.AsyncRequest.ExportingModifiedHTML';
-var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainToInspector.AsyncRequest.ExportingModifiedHTML';
+var MainToPreviewAsyncRequestToExportModifiedHTML = 'MainInspector.AsyncRequest.ExportingModifiedHTML';
 var MainToPreviewAsyncRequestToShowDevTool = 'MainToPreview.AsyncRequest.ShowingDevTool';
 var InspectToMainAsyncRequestToReturnWebviewHTML = 'InspectToMain.AsyncRequest.ReturnWebviewHTML';
 var MainToPreviewAsyncRequestToReturnWebviewHTML = 'MainToPreview.AsyncRequest.ReturnWebviewHTML';
@@ -23,6 +23,9 @@ var PreviewToWebviewAsyncRequestToReturnWebviewHTML = 'PreviewToWebview.AsyncReq
 var WebviewToMainAsyncReplyForReturningWebviewHTML = 'WebviewToMain.AsyncReply.ReturningWebviewHTML';
 var PreviewToMainAsyncReplyForReturningWebviewHTML = 'PreviewToMain.AsyncReply.ReturningWebviewHTML';
 var MainToInspectorAsyncReplyForReturningWebviewHTML = 'MainToInspector.AsyncReply.ReturningWebviewHTML';
+var InspectorToMainAsyncRequestToAddSpanTag = 'InspectorToMain.AsyncRequest.AddingSpanTag';
+var MainToPreviewAsyncRequestToAddSpanTag = 'MainToPreview.AsyncRequest.AddingSpanTag';
+var PreviewToWebviewAsyncRequestToAddSpanTag = 'PreviewToWebview.AsyncRequest.AddingSpanTag';
 /// <reference path="./requires.ts"/>
 var base_window;
 (function (base_window) {
@@ -247,6 +250,7 @@ var Application = (function (_super) {
         this.ipc.on(InspectToMainAsyncRequestToReturnWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
         this.ipc.on(PreviewToMainAsyncReplyForReturningWebviewHTML, this.acceptAsyncRequestToReturnWebviewHTML);
         this.ipc.on(WebviewToMainAsyncReplyForReturningWebviewHTML, this.acceptAsyncReplyForReturningWebviewHTML);
+        this.ipc.on(InspectorToMainAsyncRequestToAddSpanTag, this.acceptAsyncRequestToAddSpanTag);
     };
     Application.prototype.setAcceptedSyncMessageReaction = function () {
         // Use no synchronous communication event
@@ -314,7 +318,7 @@ var Application = (function (_super) {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        console.log('Accept reply: returning webview src -', args);
+        // console.log('Accept reply: returning webview src -', args);
         thisClass.inspectorWindow.window.webContents.send(MainToInspectorAsyncReplyForReturningWebviewHTML, args);
     };
     Application.prototype.acceptAsyncRequestToExportModifiedHTML = function (event) {
@@ -331,6 +335,14 @@ var Application = (function (_super) {
         //     }
         //     else { console.log(`error - ${ error }`); }
         //   });
+    };
+    Application.prototype.acceptAsyncRequestToAddSpanTag = function (event) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        console.log('Accepted \"add span tag\"');
+        thisClass.previewWindow.window.webContents.send(MainToPreviewAsyncRequestToAddSpanTag, args[0]);
     };
     return Application;
 }(bApp.BaseApplication));
