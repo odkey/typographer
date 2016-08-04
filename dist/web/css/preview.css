@@ -1,8 +1,9 @@
+body {
+  background-color: #E0E0E0;
+  font-family: sans-serif; }
+
 div.drop-shadow {
   box-shadow: 2px 3px 10px 2px rgba(0, 0, 0, 0.2); }
-
-body {
-  background-color: #E0E0E0; }
 
 div.title {
   width: 100%;
@@ -50,21 +51,25 @@ div.control-menu {
             cursor: pointer; }
     div.control-menu div.undo-next {
       display: inline-block;
-      text-align: justify;
+      text-align: center;
       width: 20%;
       background-color: #8BC34A; }
       div.control-menu div.undo-next div {
         display: inline-block;
-        width: 49%;
+        width: auto;
         height: 1em;
         margin-top: 0.2em;
         margin-bottom: 0.2em;
-        text-align: center;
+        text-align: justify;
         color: #388E3C;
         font-size: 36px; }
         div.control-menu div.undo-next div:hover {
           color: #4CAF50;
           cursor: pointer; }
+        div.control-menu div.undo-next div.undo-button {
+          margin-right: 10%; }
+        div.control-menu div.undo-next div.next-button {
+          margin-left: 10%; }
     div.control-menu div.demo-link {
       display: inline-block;
       width: 50%;

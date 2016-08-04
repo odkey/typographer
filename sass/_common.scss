@@ -1,5 +1,10 @@
 @import '_variables';
 
+body {
+  background-color: $TYPG-dwhite;
+  font-family: sans-serif;
+}
+
 div {
   &.drop-shadow {
     box-shadow: 2px 3px 10px 2px rgba(0, 0, 0, 0.2);

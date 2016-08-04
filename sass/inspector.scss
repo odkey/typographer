@@ -1,9 +1,6 @@
 @import '_variables';
 @import '_common';
 
-body {
-  background-color: $TYPG-dwhite;
-}
 div {
   background-color: $TYPG-dblue;
   &.title {

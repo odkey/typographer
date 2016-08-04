@@ -2,9 +2,6 @@
 @import '_mixin';
 @import '_common';
 
-body {
-  background-color: $TYPG-dwhite;
-}
 div {
   &.title {
     width: 100%;
@@ -54,16 +51,16 @@ div {
       }
       &.undo-next {
         display: inline-block;
-        text-align: justify;
+        text-align: center;
         width: 20%;
         background-color: $TYPG-lgreen;
         div {
           display: inline-block;
-          width: 49%;
+          width: auto;
           height: 1em;
           margin-top: 0.2em;
           margin-bottom: 0.2em;
-          text-align: center;
+          text-align: justify;
           color: $TYPG-dgreen;
           font-size: $TYPG-ularge;
           &:hover {
@@ -71,9 +68,10 @@ div {
             cursor: pointer;
           }
           &.undo-button {
-            // margin-left: 0.5em;
+            margin-right: 10%;
           }
           &.next-button {
+            margin-left: 10%;
           }
         }
       }
